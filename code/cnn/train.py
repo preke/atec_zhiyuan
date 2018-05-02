@@ -41,7 +41,6 @@ def train(train_iter, dev_iter, model, args):
                 length = len(target.data)
                 for i in range(length):
                     a = logit.data[i]
-
                     b = target.data[i]
                     if a < 0.5 and b == 0:
                         corrects += 1
@@ -51,11 +50,10 @@ def train(train_iter, dev_iter, model, args):
                         pass
                 accuracy = 100.0 * corrects/batch.batch_size
                 sys.stdout.write(
-                    '\rBatch[{}] - loss: {:.6f}  acc: {:.4f}%({}/{})'.format(steps, 
-                                                                             loss.data[0], 
-                                                                             accuracy,
-                                                                             corrects,
-                                                                             batch.batch_size))
+                    '\rBatch[{}] - acc: {:.4f}%({}/{})'.format(steps, 
+                                                                accuracy,
+                                                                corrects,
+                                                                batch.batch_size))
             if steps % args.test_interval == 0:
                 dev_acc = eval(dev_iter, model, args)
                 if dev_acc > best_acc:
@@ -66,16 +64,12 @@ def train(train_iter, dev_iter, model, args):
                 else:
                     if steps - last_step >= args.early_stop:
                         print('early stop by {} steps.'.format(args.early_stop))
-                #
-            elif steps % args.save_interval == 0:
-                print('save loss: %s' %str(loss.data))
-                save(model, args.save_dir, 'snapshot', steps)
+
 
 
 def eval(data_iter, model, args):
-    # loss_fp = open('loss.txt','a')
     model.eval()
-    corrects, avg_loss = 0, 0
+    corrects = 0
     for batch in data_iter:
         question1, question2, target = batch.question1, batch.question2, batch.label
         if args.cuda:
@@ -86,7 +80,6 @@ def eval(data_iter, model, args):
         length = len(target.data)
         for i in range(length):
             a = logit.data[i]
-            # loss_fp.write(a)
             b = target.data[i]
             if a < 0.5 and b == 0:
                 corrects += 1
@@ -96,13 +89,10 @@ def eval(data_iter, model, args):
                 pass
         
     size = float(len(data_iter.dataset))
-    avg_loss /= size
     accuracy = 100.0 * float(corrects)/size
-    print('\nEvaluation - loss: {:.6f}  acc: {:.4f}%({}/{}) \n'.format(avg_loss, 
-                                                                       accuracy, 
-                                                                       corrects, 
-                                                                       size))
-    # loss_fp.close()
+    print('\nEvaluation -  acc: {:.4f}%({}/{}) \n'.format(accuracy, 
+                                                          corrects, 
+                                                          size))
     return accuracy
 
 
