@@ -15,7 +15,7 @@ from train import train, test
 from gensim.models import Word2Vec
 
 
-w2v_model_path = '../data/w2v_train.save'
+w2v_model_path = '../../data/w2v_train.save'
 
 parser = argparse.ArgumentParser(description='')
 # learning
