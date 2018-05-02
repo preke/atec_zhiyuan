@@ -91,8 +91,8 @@ def load_data(args):
     df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
     train_df = df.head(int(len(df)*0.9))
     dev_df   = df.tail(int(len(df)*0.1))
-    train_df.to_csv(train_path, index=False)
-    dev_df.to_csv(dev_path, index=False)
+    train_df.to_csv(train_path, index=False, encoding='utf-8')
+    dev_df.to_csv(dev_path, index=False, encoding='utf-8')
 
     
     text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True, lower=True)
