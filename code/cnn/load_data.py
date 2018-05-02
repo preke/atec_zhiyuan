@@ -16,8 +16,8 @@ import jieba
 jieba.load_userdict('../../data/special_word.txt')
 
 data_path      = '../../data/atec_nlp_sim_train.csv'
-train_path     = '../../data/train.tsv'
-dev_path       = '../../data/dev.tsv'
+train_path     = '../../data/train.csv'
+dev_path       = '../../data/dev.csv'
 w2v_model_path = '../../data/w2v_train.save'
 
 def preprocess(data_path):
@@ -97,13 +97,12 @@ def load_data(args):
     dev_df.to_csv(dev_path, index=False, encoding='utf-8')
 
     
-    text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True, lower=True)
+    text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True)
     label_field   = data.Field(sequential=False, use_vocab=False)
     
     train_data, train_iter = gen_iter(train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(dev_path, text_field, label_field, args)
     
-    text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
         train_data, train_iter,\
