@@ -34,8 +34,11 @@ if __name__ == '__main__':
     df = pd.read_csv(DATA_PATH)
     df['wordList1'] = df['wordList1'].apply(lambda x: x.split('#'))
     df['wordList2'] = df['wordList2'].apply(lambda x: x.split('#'))
-    df['Jacarrd_res'] = df.apply(lambda x: Jacarrd(x['wordList1'], x['wordList2']), axis=1)
 
+    df['Jacarrd_res'] = df.apply(lambda x: Jacarrd(x['wordList1'], x['wordList2']), axis=1)
+    df['wordList1'] = df['wordList1'].apply(lambda x: [str(i).encode('utf-8') for i in x])
+    df['wordList2'] = df['wordList2'].apply(lambda x: [str(i).encode('utf-8') for i in x])
+    df.to_csv('../data/jacarrd_res.csv', index=False)
     thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     length = len(df)
     for threshold in thresholds:
