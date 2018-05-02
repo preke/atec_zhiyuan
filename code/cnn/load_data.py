@@ -84,8 +84,8 @@ def load_data(args):
     '''
     df       = preprocess(data_path)
     df       = df[['q1_list', 'q2_list', 'label']]
-    train_df = df.head(float(len(df))*0.9)
-    dev_df   = df.tail(float(len(df))*0.1)
+    train_df = df.head(int(len(df)*0.9))
+    dev_df   = df.tail(int(len(df)*0.1))
     train_df.to_csv(train_path, index=False)
     dev_df.to_csv(dev_path, index=False)
 
