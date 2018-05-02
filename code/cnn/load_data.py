@@ -37,7 +37,7 @@ def train_word2vec_model(df):
     for i, r in df.iterrows():
         corpus.append(r['q1_list'])
         corpus.append(r['q2_list'])
-    word2vec_model = Word2Vec(corpus, size=100, window=3, min_count=3, sg=1)
+    word2vec_model = Word2Vec(corpus, size=100, window=3, min_count=1, sg=1)
     return word2vec_model
 
 
@@ -83,11 +83,12 @@ def load_data(args):
         load as pairs
     '''
     df = preprocess(data_path)
-    print ('Positive in set: %s' %str(len(df[df['label'] == 1])))
-    print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
+    #print ('Positive in set: %s' %str(len(df[df['label'] == 1])))
+    #print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
     word2vec_model = train_word2vec_model(df)
     word2vec_model.save(w2v_model_path)
-
+    for word in df['q1_list'][0]:
+        print word
     df       = df[['q1_list', 'q2_list', 'label']]
     df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
     df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
@@ -105,6 +106,7 @@ def load_data(args):
     train_data, train_iter = gen_iter(train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(dev_path, text_field, label_field, args)
     
+    text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
         train_data, train_iter,\

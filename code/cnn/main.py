@@ -33,7 +33,7 @@ parser.add_argument('-shuffle', action='store_true', default=False, help='shuffl
 # model
 parser.add_argument('-dropout', type=float, default=0.5, help='the probability for dropout [default: 0.5]')
 parser.add_argument('-max-norm', type=float, default=3.0, help='l2 constraint of parameters [default: 3.0]')
-parser.add_argument('-embed-dim', type=int, default=300, help='number of embedding dimension [default: 300]')
+parser.add_argument('-embed-dim', type=int, default=100, help='number of embedding dimension [default: 300]')
 parser.add_argument('-kernel-num', type=int, default=100, help='number of each kind of kernel')
 parser.add_argument('-kernel-sizes', type=str, default='3', help='comma-separated kernel size to use for convolution')
 parser.add_argument('-static', action='store_true', default=True, help='fix the embedding')
@@ -51,10 +51,11 @@ args = parser.parse_args()
 text_field, label_field, train_data, train_iter,\
     dev_data, dev_iter = load_data(args)
 
-text_field.build_vocab(train_data, dev_data)
+# text_field.build_vocab(train_data, dev_data)
+
 
 args.embed_num = len(text_field.vocab)
-args.embed_dim = 300
+args.embed_dim = 100
 args.word_Embedding = True
 
 embedding_dict = Word2Vec.load(w2v_model_path)
@@ -62,11 +63,12 @@ word_vec_list = []
 oov = 0
 for idx, word in enumerate(text_field.vocab.itos):
     try:
-        vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+        vector = np.array(embedding_dict[word.encode('utf-8')], dtype=float).reshape(1, args.embed_dim)
     except:
+        print word
         oov += 1
         vector = np.random.rand(1, args.embed_dim)
-    word_vec_list.append(torch.from_numpy(vector))
+word_vec_list.append(torch.from_numpy(vector))
 wordvec_matrix = torch.cat(word_vec_list)
 print('oov: %s' %str(oov))
 print(args.embed_num)
