@@ -1,7 +1,23 @@
-# coding=gb18030
+# coding=utf-8
 import pandas as pd
 import numpy as np
 
+
+
+'''
+results:
+
+Threshold is 0.1, Accuracy is 0.233950083871
+Threshold is 0.2, Accuracy is 0.352767752758
+Threshold is 0.3, Accuracy is 0.607126518579
+Threshold is 0.4, Accuracy is 0.750851420729
+Threshold is 0.5, Accuracy is 0.785391145224
+Threshold is 0.6, Accuracy is 0.789737203274
+Threshold is 0.7, Accuracy is 0.786585675799
+Threshold is 0.8, Accuracy is 0.784094952473
+Threshold is 0.9, Accuracy is 0.782824175266
+
+'''
 
 DATA_PATH = '../data/split_result.csv'
 
@@ -15,10 +31,10 @@ def Jacarrd(vec1, vec2):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(open(DATA_PATH, 'rU'), encoding='gb18030')
-    df['wordList1'] = df['wordList1'].apply(lambda x: s.split('#'))
-    df['wordList2'] = df['wordList2'].apply(lambda x: s.split('#'))
-    df['Jacarrd_res'] = df.apply(lambda x: Jacarrd(x['wordList1'], x['wordList2']))
+    df = pd.read_csv(DATA_PATH)
+    df['wordList1'] = df['wordList1'].apply(lambda x: x.split('#'))
+    df['wordList2'] = df['wordList2'].apply(lambda x: x.split('#'))
+    df['Jacarrd_res'] = df.apply(lambda x: Jacarrd(x['wordList1'], x['wordList2']), axis=1)
 
     thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     length = len(df)
@@ -29,4 +45,4 @@ if __name__ == '__main__':
                 tmp_acc += 1
             elif r['is_duplicated'] == 0 and r['Jacarrd_res'] < threshold:
                 tmp_acc += 1
-        print('Threshold is %s, Accuracy is %s' %(str(threshold), str(tmp_acc/length)))
+        print('Threshold is %s, Accuracy is %s' %(str(threshold), str(float(tmp_acc)/length)))
