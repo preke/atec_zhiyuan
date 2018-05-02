@@ -1,4 +1,4 @@
-# coding=utf-8
+# coding=gb18030
 import pandas as pd
 import numpy as np
 
