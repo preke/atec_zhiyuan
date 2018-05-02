@@ -40,11 +40,11 @@ def train(train_iter, dev_iter, model, args):
                 corrects = 0 
                 length = len(target.data)
                 for i in range(length):
-                    a = logit.data[i]
-                    b = target.data[i]
-                    if a < 0.25 and b == 0:
+                    a = logit[i]
+                    b = target[i]
+                    if a < 0.5 and b == 0:
                         corrects += 1
-                    elif a >= 0.25 and b == 1:
+                    elif a >= 0.5 and b == 1:
                         corrects += 1
                     else:
                         pass
@@ -79,11 +79,11 @@ def eval(data_iter, model, args):
         target = target.type(torch.cuda.FloatTensor)
         length = len(target.data)
         for i in range(length):
-            a = logit.data[i]
-            b = target.data[i]
-            if a < 0.25 and b == 0:
+            a = logit[i]
+            b = target[i]
+            if a < 0.5 and b == 0:
                 corrects += 1
-            elif a >= 0.25 and b == 1:
+            elif a >= 0.5 and b == 1:
                 corrects += 1
             else:
                 pass
