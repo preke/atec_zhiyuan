@@ -8,7 +8,7 @@ import torch.nn as nn
 import pandas as pd
 import traceback
 
-def train(train_iter, vali_iter, model, args):
+def train(train_iter, dev_iter, model, args):
     if args.cuda:
         model.cuda()
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
@@ -57,9 +57,9 @@ def train(train_iter, vali_iter, model, args):
                                                                              corrects,
                                                                              batch.batch_size))
             if steps % args.test_interval == 0:
-                vali_acc = eval(vali_iter, model, args)
-                if vali_acc > best_acc:
-                    best_acc = vali_acc
+                dev_acc = eval(dev_iter, model, args)
+                if dev_acc > best_acc:
+                    best_acc = dev_acc
                     last_step = steps
                     if args.save_best:
                         save(model, args.save_dir, 'best', steps, best_acc)
