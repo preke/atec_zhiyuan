@@ -25,8 +25,8 @@ def preprocess(data_path):
     convert Chinese sentences to word lists
     '''
     df = pd.read_csv(data_path, sep='\t', names=['id', 'q1', 'q2', 'label'])
-    df['q1_list'] = df['q1'].apply(lambda x: [i for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
-    df['q2_list'] = df['q2'].apply(lambda x: [i for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    df['q1_list'] = df['q1'].apply(lambda x: [str(i) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    df['q2_list'] = df['q2'].apply(lambda x: [str(i) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
     return df
 
 def train_word2vec_model(df):
