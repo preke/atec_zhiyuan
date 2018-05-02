@@ -69,6 +69,7 @@ for idx, word in enumerate(text_field.vocab.itos):
     word_vec_list.append(torch.from_numpy(vector))
 wordvec_matrix = torch.cat(word_vec_list)
 print('oov: %s' %str(oov))
+print(args.embed_num)
 args.pretrained_weight = wordvec_matrix
 args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
 
