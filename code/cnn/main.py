@@ -59,17 +59,16 @@ args.word_Embedding = True
 
 embedding_dict = Word2Vec.load(w2v_model_path)
 word_vec_list = []
+oov = 0
 for idx, word in enumerate(text_field.vocab.itos):
-    if word in embedding_dict:
-        try:
-            vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
-        except:
-            vector = np.random.rand(1, args.embed_dim)
-    else:
+    try:
+        vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+    except:
+        oov += 1
         vector = np.random.rand(1, args.embed_dim)
     word_vec_list.append(torch.from_numpy(vector))
 wordvec_matrix = torch.cat(word_vec_list)
-
+print('oov: %s' %str(oov))
 args.pretrained_weight = wordvec_matrix
 args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
 
