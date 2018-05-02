@@ -15,7 +15,7 @@ def Jacarrd(vec1, vec2):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(open(DATA_PATH, 'rU'), encoding='utf-8')
+    df = pd.read_csv(open(DATA_PATH, 'rU'), encoding='gb18030')
     df['wordList1'] = df['wordList1'].apply(lambda x: s.split('#'))
     df['wordList2'] = df['wordList2'].apply(lambda x: s.split('#'))
     df['Jacarrd_res'] = df.apply(lambda x: Jacarrd(x['wordList1'], x['wordList2']))
