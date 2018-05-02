@@ -17,7 +17,6 @@ def train(train_iter, vali_iter, model, args):
     best_acc = 0
     last_step = 0
     
-    # epoch 是 训练的 round
     
     for epoch in range(1, args.epochs+1): 
         print('\nEpoch:%s\n'%epoch)
@@ -34,10 +33,6 @@ def train(train_iter, vali_iter, model, args):
             loss.backward()
             optimizer.step()
             
-            '''
-                记录每次model返回一个pair的相似度
-                手动计算MSE
-            '''
             
 
             steps += 1
@@ -141,3 +136,4 @@ def save(model, save_dir, save_prefix, steps, acc):
     save_prefix = os.path.join(save_dir, save_prefix)
     save_path = '{}_steps_{}_{}.pt'.format(save_prefix, steps, acc)
     torch.save(model.state_dict(), save_path)
+

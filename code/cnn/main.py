@@ -17,7 +17,6 @@ from gensim.models import Word2Vec
 
 w2v_model_path = '../data/w2v_train.save'
 
-# 参数设置：
 parser = argparse.ArgumentParser(description='')
 # learning
 parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
