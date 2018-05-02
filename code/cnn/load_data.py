@@ -5,21 +5,20 @@ import numpy as np
 import re
 import random
 import tarfile
-import urllib
 from torchtext import data
 from datetime import datetime
-import traceback
-from sklearn.utils import shuffle  
+import traceback  
 import torchtext.datasets as datasets
 import pickle
 from gensim.models import Word2Vec
 import jieba
-jieba.load_userdict('../data/special_word.txt')
+
+jieba.load_userdict('../../data/special_word.txt')
 
 data_path      = '../../data/atec_nlp_sim_train.csv'
 train_path     = '../../data/train.tsv'
 dev_path       = '../../data/dev.tsv'
-w2v_model_path = '../data/w2v_train.save'
+w2v_model_path = '../../data/w2v_train.save'
 
 def preprocess(data_path):
     '''
