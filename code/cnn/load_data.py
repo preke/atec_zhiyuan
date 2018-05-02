@@ -77,22 +77,25 @@ def gen_iter(path, text_field, label_field, args):
 
 def load_data(args):
     '''
-        1. split the data as 9:1(train:dev)
-        2. train the w2v_model
+        1. train the w2v_model
+        2. split the data as 9:1(train:dev)
         3. load the data
         load as pairs
     '''
-    df       = preprocess(data_path)
+    df = preprocess(data_path)
+    word2vec_model = train_word2vec_model(df)
+    word2vec_model.save(w2v_model_path)
+
     df       = df[['q1_list', 'q2_list', 'label']]
+    df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
+    df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
     train_df = df.head(int(len(df)*0.9))
     dev_df   = df.tail(int(len(df)*0.1))
     train_df.to_csv(train_path, index=False)
     dev_df.to_csv(dev_path, index=False)
 
-    word2vec_model = train_word2vec_model(df)
-    word2vec_model.save(w2v_model_path)
     
-    text_field    = data.Field(sequential=False, use_vocab=True, batch_first=True, lower=True)
+    text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True, lower=True)
     label_field   = data.Field(sequential=False, use_vocab=False)
     
     train_data, train_iter = gen_iter(train_path, text_field, label_field, args)
