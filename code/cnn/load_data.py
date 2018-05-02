@@ -83,8 +83,8 @@ def load_data(args):
         load as pairs
     '''
     df = preprocess(data_path)
-    print ('Positive in set: %s' %str(len(dev_df[dev_df['label'] == 1])))
-    print ('Negative in set: %s' %str(len(dev_df[dev_df['label'] == 0])))
+    print ('Positive in set: %s' %str(len(df[df['label'] == 1])))
+    print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
     word2vec_model = train_word2vec_model(df)
     word2vec_model.save(w2v_model_path)
 
