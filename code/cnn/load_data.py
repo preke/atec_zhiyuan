@@ -91,8 +91,8 @@ def load_data(args):
     df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
     train_df = df.head(int(len(df)*0.9))
     dev_df   = df.tail(int(len(df)*0.1))
-    print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
-    print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
+    # print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
+    # print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
     train_df.to_csv(train_path, index=False, encoding='utf-8')
     dev_df.to_csv(dev_path, index=False, encoding='utf-8')
 

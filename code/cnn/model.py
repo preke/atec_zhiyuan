@@ -52,3 +52,5 @@ class CNN_Sim(nn.Module):
         cos_ans = F.cosine_similarity(q1, q2)
         # print(type(cos_ans))
         return cos_ans
+
+
