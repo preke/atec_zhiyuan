@@ -37,7 +37,7 @@ def train_word2vec_model(df):
     for i, r in df.iterrows():
         corpus.append(r['q1_list'])
         corpus.append(r['q2_list'])
-    word2vec_model = Word2Vec(corpus, size=100, window=3, min_count=1, sg=1)
+    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=1)
     return word2vec_model
 
 
@@ -71,7 +71,7 @@ def gen_iter(path, text_field, label_field, args):
                     tmp_data,
                     batch_size=args.batch_size,
                     sort_key=lambda x: len(x.question1) + len(x.question2),
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=-1, # 0 for GPU, -1 for CPU
                     repeat=False)
     return tmp_data, tmp_iter
 
@@ -87,8 +87,6 @@ def load_data(args):
     #print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
     word2vec_model = train_word2vec_model(df)
     word2vec_model.save(w2v_model_path)
-    for word in df['q1_list'][0]:
-        print word
     df       = df[['q1_list', 'q2_list', 'label']]
     df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
     df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
