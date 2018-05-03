@@ -65,7 +65,7 @@ for idx, word in enumerate(text_field.vocab.itos):
     try:
         vector = np.array(embedding_dict[word.encode('utf-8')], dtype=float).reshape(1, args.embed_dim)
     except:
-        print(traceback.print_exc())
+        print(word)
         oov += 1
         vector = np.random.rand(1, args.embed_dim)
 word_vec_list.append(torch.from_numpy(vector))
