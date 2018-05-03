@@ -71,7 +71,7 @@ def gen_iter(path, text_field, label_field, args):
                     tmp_data,
                     batch_size=args.batch_size,
                     sort_key=lambda x: len(x.question1) + len(x.question2),
-                    device=-1, # 0 for GPU, -1 for CPU
+                    device=0, # 0 for GPU, -1 for CPU
                     repeat=False)
     return tmp_data, tmp_iter
 
