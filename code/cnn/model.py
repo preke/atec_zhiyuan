@@ -22,8 +22,13 @@ class CNN_Text(nn.Module):
             # pass
             self.embed.weight.data.copy_(args.pretrained_weight)
         self.convs1 = nn.ModuleList([nn.Conv2d(Ci, Co, (K, D)) for K in Ks])
-        self.dropout = nn.Dropout(args.dropout)
+        # self.dropout = nn.Dropout(args.dropout)
         self.fc1 = nn.Linear(300, 300)
+        self.dropout1 = nn.Dropout(p=0.5)
+        self.fc2 = nn.Linear(300, 300)
+        self.dropout2 = nn.Dropout(p=0.5)
+        self.fc3 = nn.Linear(300, 300)
+        self.dropout3 = nn.Dropout(p=0.5)
 
     
     def forward(self, q1):
@@ -34,6 +39,12 @@ class CNN_Text(nn.Module):
         q1 = [F.tanh(i) for i in q1]
         # q1 = self.fc1(q1)
         # q1 = self.dropout(q1)
+        q1 = self.fc1(q1)
+        q1 = self.dropout1(q1)
+        q1 = self.fc2(q1)
+        q1 = self.dropout2(q1)
+        q1 = self.fc3(q1)
+        q1 = self.dropout3(q1)
         q1 = torch.cat(q1, 1) # 64 * 300
         
         return q1
