@@ -39,12 +39,12 @@ class CNN_Text(nn.Module):
         q1 = [F.tanh(i) for i in q1]
         # q1 = self.fc1(q1)
         # q1 = self.dropout(q1)
-        q1 = self.fc1(q1)
-        q1 = self.dropout1(q1)
-        q1 = self.fc2(q1)
-        q1 = self.dropout2(q1)
-        q1 = self.fc3(q1)
-        q1 = self.dropout3(q1)
+        q1 = [self.fc1(q) for q in q1]
+        q1 = [self.dropout1(q) for q in q1]
+        q1 = [self.fc2(q) for q in q1]
+        q1 = [self.dropout2(q) for q in q1]
+        q1 = [self.fc3(q) for q in q1]
+        q1 = [self.dropout3(q) for q in q1]
         q1 = torch.cat(q1, 1) # 64 * 300
         
         return q1
