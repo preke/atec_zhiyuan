@@ -5,18 +5,18 @@ import torch
 import torchtext.data as data
 import torchtext.datasets as datasets
 import argparse
+from load_data import load_quora, load_glove_as_dict
+import mydatasets
 import os
 import datetime
 import traceback
 import model
-
-from load_data import load_data
 from train import train, test
-from gensim.models import Word2Vec
 
 
+glove_path = '../../data/wordvec.txt'
 w2v_model_path = '../../data/w2v_train.save'
-
+# 参数设置：
 parser = argparse.ArgumentParser(description='')
 # learning
 parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
@@ -33,9 +33,9 @@ parser.add_argument('-shuffle', action='store_true', default=False, help='shuffl
 # model
 parser.add_argument('-dropout', type=float, default=0.5, help='the probability for dropout [default: 0.5]')
 parser.add_argument('-max-norm', type=float, default=3.0, help='l2 constraint of parameters [default: 3.0]')
-parser.add_argument('-embed-dim', type=int, default=100, help='number of embedding dimension [default: 300]')
+parser.add_argument('-embed-dim', type=int, default=300, help='number of embedding dimension [default: 300]')
 parser.add_argument('-kernel-num', type=int, default=100, help='number of each kind of kernel')
-parser.add_argument('-kernel-sizes', type=str, default='3', help='comma-separated kernel size to use for convolution')
+parser.add_argument('-kernel-sizes', type=str, default='3,4,5', help='comma-separated kernel size to use for convolution')
 parser.add_argument('-static', action='store_true', default=True, help='fix the embedding')
 # device
 parser.add_argument('-device', type=int, default=0, help='device to use for iterate data, -1 mean cpu [default: -1]')
@@ -49,29 +49,30 @@ args = parser.parse_args()
 
 # load data
 text_field, label_field, train_data, train_iter,\
-    dev_data, dev_iter = load_data(args)
+    vali_data, vali_iter, test_data, test_iter = load_quora(args)
 
-# text_field.build_vocab(train_data, dev_data)
-
+text_field.build_vocab(train_data, vali_data, min_freq=5)
+# label_field.build_vocab(train_data, vali_data)
 
 args.embed_num = len(text_field.vocab)
-args.embed_dim = 100
+args.embed_dim = 300
 args.word_Embedding = True
 
-embedding_dict = Word2Vec.load(w2v_model_path)
+embedding_dict = load_glove_as_dict(glove_path)
+embedding_dict_chinese = Word2Vec.load(w2v_model_path)
 word_vec_list = []
-oov = 0
 for idx, word in enumerate(text_field.vocab.itos):
     try:
-        vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+        try:
+            vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+        except:
+            vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
     except:
-        print(word)
-        oov += 1
         vector = np.random.rand(1, args.embed_dim)
-word_vec_list.append(torch.from_numpy(vector))
+    
+    word_vec_list.append(torch.from_numpy(vector))
 wordvec_matrix = torch.cat(word_vec_list)
-print('oov: %s' %str(oov))
-print(args.embed_num)
+
 args.pretrained_weight = wordvec_matrix
 args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
 
@@ -91,10 +92,18 @@ if args.snapshot is not None:
         
 else:
     try:
-        train(train_iter=train_iter, dev_iter=dev_iter, model=cnn, args=args)
+        train(train_iter=train_iter, vali_iter=vali_iter, model=cnn, args=args)
     except KeyboardInterrupt:
         print(traceback.print_exc())
         print('\n' + '-' * 89)
         print('Exiting from training early')
 
 test(test_iter=test_iter, model=cnn, args=args)
+
+
+
+
+
+
+
+

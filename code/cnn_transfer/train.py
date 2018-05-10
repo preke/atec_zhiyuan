@@ -8,18 +8,21 @@ import torch.nn as nn
 import pandas as pd
 import traceback
 
-def train(train_iter, dev_iter, model, args):
+def train(train_iter, vali_iter, model, args):
     if args.cuda:
         model.cuda()
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
+    # optimizer = torch.optim.Adam(parameters, lr=args.lr)
     optimizer = torch.optim.Adam(parameters, lr=args.lr)
     steps = 0
     best_acc = 0
     last_step = 0
     
+    # epoch 是 训练的 round
     
     for epoch in range(1, args.epochs+1): 
         print('\nEpoch:%s\n'%epoch)
+        
         model.train()
         for batch in train_iter:
             question1, question2, target = batch.question1, batch.question2, batch.label
@@ -33,6 +36,10 @@ def train(train_iter, dev_iter, model, args):
             loss.backward()
             optimizer.step()
             
+            '''
+                记录每次model返回一个pair的相似度
+                手动计算MSE
+            '''
             
 
             steps += 1
@@ -41,6 +48,7 @@ def train(train_iter, dev_iter, model, args):
                 length = len(target.data)
                 for i in range(length):
                     a = logit.data[i]
+
                     b = target.data[i]
                     if a < 0.5 and b == 0:
                         corrects += 1
@@ -50,26 +58,31 @@ def train(train_iter, dev_iter, model, args):
                         pass
                 accuracy = 100.0 * corrects/batch.batch_size
                 sys.stdout.write(
-                    '\rBatch[{}] - acc: {:.4f}%({}/{})'.format(steps, 
-                                                                accuracy,
-                                                                corrects,
-                                                                batch.batch_size))
+                    '\rBatch[{}] - loss: {:.6f}  acc: {:.4f}%({}/{})'.format(steps, 
+                                                                             loss.data[0], 
+                                                                             accuracy,
+                                                                             corrects,
+                                                                             batch.batch_size))
             if steps % args.test_interval == 0:
-                dev_acc = eval(dev_iter, model, args)
-                if dev_acc > best_acc:
-                    best_acc = dev_acc
+                vali_acc = eval(vali_iter, model, args)
+                if vali_acc > best_acc:
+                    best_acc = vali_acc
                     last_step = steps
                     if args.save_best:
                         save(model, args.save_dir, 'best', steps, best_acc)
                 else:
                     if steps - last_step >= args.early_stop:
                         print('early stop by {} steps.'.format(args.early_stop))
-
+                #
+            elif steps % args.save_interval == 0:
+                print('save loss: %s' %str(loss.data))
+                save(model, args.save_dir, 'snapshot', steps)
 
 
 def eval(data_iter, model, args):
+    # loss_fp = open('loss.txt','a')
     model.eval()
-    corrects = 0
+    corrects, avg_loss = 0, 0
     for batch in data_iter:
         question1, question2, target = batch.question1, batch.question2, batch.label
         if args.cuda:
@@ -80,8 +93,8 @@ def eval(data_iter, model, args):
         length = len(target.data)
         for i in range(length):
             a = logit.data[i]
+            # loss_fp.write(a)
             b = target.data[i]
-            # print('%s,   %s' %(str(a), str(b)))
             if a < 0.5 and b == 0:
                 corrects += 1
             elif a >= 0.5 and b == 1:
@@ -90,10 +103,13 @@ def eval(data_iter, model, args):
                 pass
         
     size = float(len(data_iter.dataset))
+    avg_loss /= size
     accuracy = 100.0 * float(corrects)/size
-    print('\nEvaluation -  acc: {:.4f}%({}/{}) \n'.format(accuracy, 
-                                                          corrects, 
-                                                          size))
+    print('\nEvaluation - loss: {:.6f}  acc: {:.4f}%({}/{}) \n'.format(avg_loss, 
+                                                                       accuracy, 
+                                                                       corrects, 
+                                                                       size))
+    # loss_fp.close()
     return accuracy
 
 
@@ -127,4 +143,3 @@ def save(model, save_dir, save_prefix, steps, acc):
     save_prefix = os.path.join(save_dir, save_prefix)
     save_path = '{}_steps_{}_{}.pt'.format(save_prefix, steps, acc)
     torch.save(model.state_dict(), save_path)
-

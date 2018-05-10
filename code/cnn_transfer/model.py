@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Variable
 from math import sqrt
 import numpy as np
 
@@ -53,4 +54,18 @@ class CNN_Sim(nn.Module):
         # print(type(cos_ans))
         return cos_ans
 
+class CNN_features(nn.Module):
+    def __init__(self, args):
+        super(CNN_Sim, self).__init__()
+        self.cnn1 = CNN_Text(args)
+        self.cnn2 = CNN_Text(args)
+    def forward(self, q1, q2):
+        cnn1 = self.cnn1
+        cnn2 = self.cnn2
+        q1 = cnn1.forward(q1)
+        q2 = cnn2.forward(q2)
+        
+        # cos_ans = F.cosine_similarity(q1, q2)
+        # print(type(cos_ans))
+        # return cos_ans
 
