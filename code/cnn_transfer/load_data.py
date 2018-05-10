@@ -14,9 +14,9 @@ import torchtext.datasets as datasets
 import pickle
 
 quora_path = '../../data/quora_duplicate_questions.tsv'
-quora_train_path = '../../data/train.tsv'
-quora_vali_path = '../../data/dev.tsv'
-quora_test_path = '../../data/test.tsv'
+quora_train_path = '../../data/qoura_train.tsv'
+quora_vali_path = '../../data/qoura_dev.tsv'
+quora_test_path = '../../data/qoura_test.tsv'
 
 
 # data_path      = '../../data/atec_nlp_sim_train.csv'
