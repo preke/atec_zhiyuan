@@ -29,6 +29,7 @@ class paras(object):
         self.embed_dim         = 300
         self.embed_num         = 300
         self.kernel_sizes      = '3'
+        self.kernel_num        = 300
         self.static            = True
         self.device            = 0
         self.no_cuda           = False
