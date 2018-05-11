@@ -98,27 +98,21 @@ def eval(data_iter, model, args):
 
 
 def test(test_iter, model, args):
-    accuracy = 0.0
-    total_num = 0.0
     threshold = 0.5
+    res = []
     for batch in test_iter:
-        question1, question2, label = batch.question1, batch.question2, batch.label
+        qid, question1, question2 = qid.question1, batch.question1, batch.question2
         if args.cuda:
-            question1, question2, label = question1.cuda(), question2.cuda(), label.cuda()
-        label = label.type(torch.cuda.FloatTensor)   
+            qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
-        for i in range(len(label.data)):
-            if (label.data[i] == 1) and (results.data[i] >= threshold):
-                accuracy += 1.0
-            elif (label.data[i] == 0) and (results.data[i] < threshold):
-                accuracy += 1.0
-            else:
-                pass
-            
-        total_num += len(label.data)
-    # print(accuracy)
-    # print(total_num)
-    print('Threshold is: %s, Accuracy is: %s' %(str(threshold), str(accuracy/total_num)))
+        for i in range(len(qid.data)):
+            if results.data[i] >= threshold:
+                res.append([qid.data[i], 1])
+            elif results.data[i] < threshold:
+                res.append([qid.data[i], 0])
+    
+    res = pd.DataFrame(res, names=['id', 'label'])
+    res.to_csv(args.res_path, sep='\t', index=False, header=None)
 
 
 def save(model, save_dir, save_prefix, steps, acc):
