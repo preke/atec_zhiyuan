@@ -31,8 +31,8 @@ class paras(object):
         self.kernel_sizes      = '3'
         self.kernel_num        = 300
         self.static            = True
-        self.device            = 0
-        self.no_cuda           = False
+        self.device            = -1
+        self.no_cuda           = True
         self.snapshot          = None
         self.train_path        = '../data/train.csv'
         self.dev_path          = '../data/dev.csv'
@@ -43,7 +43,7 @@ class paras(object):
         self.res_path          = None
         self.word_Embedding    = True
         self.pretrained_weight = None
-        self.cuda              = None
+        self.cuda              = False
 
 if __name__ == '__main__':
     in_path = sys.argv[1]
@@ -120,15 +120,17 @@ if __name__ == '__main__':
 
 
     cnn = model.CNN_Sim(args)
-    args.cuda = (not args.no_cuda) and torch.cuda.is_available(); del args.no_cuda
-    if args.cuda:
-            torch.cuda.set_device(args.device)
-            cnn = cnn.cuda()
+    args.cuda = (not args.no_cuda) and torch.cuda.is_available()# ; del args.no_cuda
+    # if args.cuda:
+    #         torch.cuda.set_device(args.device)
+    #         cnn = cnn.cuda()
 
-    cnn.load_state_dict(torch.load('snapshot/best_steps_100_78.0376207422.pt'))
-    if args.cuda:
-            torch.cuda.set_device(args.device)
-            cnn = cnn.cuda()
+    cnn.load_state_dict(torch.load('snapshot/best_steps_100_78.0376207422.pt'), map_location=lambda storage, loc:storage)
+    # if args.cuda:
+    #         torch.cuda.set_device(args.device)
+    #         cnn = cnn.cuda()
+    
+
     # if args.snapshot is not None:
     #     print('\nLoading model from {}...'.format(args.snapshot))
     #     cnn.load_state_dict(torch.load(args.snapshot))
