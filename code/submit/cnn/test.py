@@ -19,8 +19,8 @@ from gensim.models import Word2Vec
 w2v_model_path = '../../../data/w2v_train.save'
 
 if __name__ == '__main__':
-    # train_path = sys.argv[1]
-    # test_path  = sys.argv[2]
+    train_path = sys.argv[1]
+    test_path  = sys.argv[2]
 
     parser = argparse.ArgumentParser(description='')
     # learning
@@ -51,11 +51,11 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = '../../../data/train.csv'
-    args.dev_path       = '../../../data/dev.csv'
-    args.test_path      = '../../../data/test.csv'
-    args.w2v_model_path = '../../../data/w2v_train.save'
-    args.data_path      = '../../../data/atec_nlp_sim_train.csv'
+    arg.train_path = sys.argv[1]
+    arg.test_path = sys.argv[2]
+
+
+
     # load data
     text_field, label_field, train_data, train_iter,\
         dev_data, dev_iter = load_data(args)
