@@ -114,6 +114,7 @@ def preprocess_test(data_path):
     convert Chinese sentences to word lists
     '''
     df = pd.read_csv(data_path, sep='\t', names=['id', 'q1', 'q2'])
+    print df.head()
     df['q1_list'] = df['q1'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
     df['q2_list'] = df['q2'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
     return df
@@ -156,6 +157,7 @@ def load_data(args):
     df_test = preprocess_test(args.test_path)
     df_test['q1_list'] = df_test['q1_list'].apply(lambda x: ' '.join(x))
     df_test['q2_list'] = df_test['q2_list'].apply(lambda x: ' '.join(x))
+    df = df[['id', 'q1_list', 'q2_list']]
     df_test.to_csv(args.test_path, index=False, encoding='utf-8')
     
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
