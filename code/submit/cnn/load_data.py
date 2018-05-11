@@ -116,6 +116,6 @@ def load_data(args):
 
     return text_field, label_field, \
         train_data, train_iter,\
-        dev_data, dev_iter,
+        dev_data, dev_iter,\
         test_data, test_iter
           
