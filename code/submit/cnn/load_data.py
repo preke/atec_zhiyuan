@@ -12,7 +12,7 @@ import pickle
 from gensim.models import Word2Vec
 import jieba
 
-jieba.load_userdict('../../../data/special_word.txt')
+jieba.load_userdict('../data/special_word.txt')
 
 
 
