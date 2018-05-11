@@ -101,7 +101,7 @@ def test(test_iter, model, args):
     threshold = 0.5
     res = []
     for batch in test_iter:
-        qid, question1, question2 = batch.qid1, batch.question1, batch.question2
+        qid, question1, question2 = batch.id, batch.question1, batch.question2
         if args.cuda:
             qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
