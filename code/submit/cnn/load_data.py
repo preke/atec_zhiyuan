@@ -12,12 +12,12 @@ import pickle
 from gensim.models import Word2Vec
 import jieba
 
-jieba.load_userdict('../../data/special_word.txt')
+jieba.load_userdict('../../../data/special_word.txt')
 
-data_path      = '../../data/atec_nlp_sim_train.csv'
-train_path     = '../../data/train.csv'
-dev_path       = '../../data/dev.csv'
-w2v_model_path = '../../data/w2v_train.save'
+data_path      = '../../../data/atec_nlp_sim_train.csv'
+train_path     = '../../../data/train.csv'
+dev_path       = '../../../data/dev.csv'
+w2v_model_path = '../../../data/w2v_train.save'
 
 def preprocess(data_path):
     '''
