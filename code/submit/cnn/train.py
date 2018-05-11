@@ -111,7 +111,7 @@ def test(test_iter, model, args):
             elif results.data[i] < threshold:
                 res.append([qid.data[i], 0])
     
-    res = pd.DataFrame(res, names=['id', 'label'])
+    res = pd.DataFrame(res, columns=['id', 'label'])
     res.to_csv(args.res_path, sep='\t', index=False, header=None)
 
 
