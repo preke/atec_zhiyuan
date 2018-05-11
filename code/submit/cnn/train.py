@@ -79,8 +79,8 @@ def eval(data_iter, model, args):
         target = target.type(torch.cuda.FloatTensor)
         length = len(target.data)
         for i in range(length):
-            a = logit.data[i]
-            b = target.data[i]
+            a = logit.data[i].numpy()
+            b = target.data[i].numpy()
             # print('%s,   %s' %(str(a), str(b)))
             if a < 0.5 and b == 0:
                 corrects += 1
@@ -107,9 +107,9 @@ def test(test_iter, model, args):
         results = model(question1, question2)
         for i in range(len(qid.data)):
             if results.data[i] >= threshold:
-                res.append([qid.data[i], 1])
+                res.append([qid.data[i].numpy(), 1])
             elif results.data[i] < threshold:
-                res.append([qid.data[i], 0])
+                res.append([qid.data[i].numpy(), 0])
     
     res = pd.DataFrame(res, columns=['id', 'label'])
     res.to_csv(args.res_path, sep='\t', index=False, header=None)

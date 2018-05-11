@@ -15,10 +15,10 @@ from load_data import load_data
 from train import train, test
 from gensim.models import Word2Vec
 
-
-w2v_model_path = '../../../data/w2v_train.save'
-
 if __name__ == '__main__':
+    in_path = sys.argv[1]
+    out_path  = sys.argv[2]
+
     parser = argparse.ArgumentParser(description='')
     # learning
     parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
@@ -48,18 +48,20 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = '../../../data/train.csv'
-    args.dev_path       = '../../../data/dev.csv'
-    args.test_path      = '../../../data/test.csv'
-    args.w2v_model_path = '../../../data/w2v_train.save'
-    args.data_path      = '../../../data/atec_nlp_sim_train.csv'
-    args.input_path = sys.argv[1]
-    args.output_path  = sys.argv[2]
-
+    args.train_path     = '../data/train.csv'
+    args.dev_path       = '../data/dev.csv'
+    args.test_path      = in_path
+    args.to_test_path   = '../data/to_test.csv'
+    args.w2v_model_path = '../data/w2v_train.save'
+    args.data_path      = '../data/atec_nlp_sim_train.csv'
+    args.res_path       = out_path
+    # load data
+    # text_field, label_field, train_data, train_iter,\
+    #     dev_data, dev_iter = load_data(args)
 
     # load data
     text_field, label_field, train_data, train_iter,\
-        dev_data, dev_iter = load_data(args)
+        dev_data, dev_iter, test_data, test_iter = load_data(args)
 
     # text_field.build_vocab(train_data, dev_data)
 
@@ -68,7 +70,7 @@ if __name__ == '__main__':
     args.embed_dim = 300
     args.word_Embedding = True
 
-    embedding_dict = Word2Vec.load(w2v_model_path)
+    embedding_dict = Word2Vec.load(args.w2v_model_path)
     word_vec_list = []
     oov = 0
     for idx, word in enumerate(text_field.vocab.itos):
@@ -92,19 +94,23 @@ if __name__ == '__main__':
             torch.cuda.set_device(args.device)
             cnn = cnn.cuda()
 
-    if args.snapshot is not None:
-        print('\nLoading model from {}...'.format(args.snapshot))
-        cnn.load_state_dict(torch.load(args.snapshot))
-        if args.cuda:
+    cnn.load_state_dict(torch.load('snapshot/best_steps_100_78.0376207422.pt'))
+    if args.cuda:
             torch.cuda.set_device(args.device)
             cnn = cnn.cuda()
+    # if args.snapshot is not None:
+    #     print('\nLoading model from {}...'.format(args.snapshot))
+    #     cnn.load_state_dict(torch.load(args.snapshot))
+    #     if args.cuda:
+    #         torch.cuda.set_device(args.device)
+    #         cnn = cnn.cuda()
             
-    else:
-        try:
-            train(train_iter=train_iter, dev_iter=dev_iter, model=cnn, args=args)
-        except KeyboardInterrupt:
-            print(traceback.print_exc())
-            print('\n' + '-' * 89)
-            print('Exiting from training early')
+    # else:
+    #     try:
+    #         train(train_iter=train_iter, dev_iter=dev_iter, model=cnn, args=args)
+    #     except KeyboardInterrupt:
+    #         print(traceback.print_exc())
+    #         print('\n' + '-' * 89)
+    #         print('Exiting from training early')
 
     test(test_iter=test_iter, model=cnn, args=args)
