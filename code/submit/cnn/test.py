@@ -17,7 +17,7 @@ from gensim.models import Word2Vec
 
 
 class paras(object):
-    def __init__():
+    def __init__(self):
         self.lr                = 0.001
         self.epochs            = 50
         self.batch_size        = 16
