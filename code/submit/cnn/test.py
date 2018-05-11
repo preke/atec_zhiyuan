@@ -15,11 +15,40 @@ from load_data import load_data
 from train import train, test
 from gensim.models import Word2Vec
 
+
+class paras(object):
+    def __init__():
+        self.lr                = 0.001
+        self.epochs            = 50
+        self.batch_size        = 16
+        self.log_interval      = 100
+        self.save_interval     = 500
+        self.save_dir          = 'snapshot'
+        self.early_stop        = 1000
+        self.save_best         = True
+        self.embed_dim         = 300
+        self.embed_num         = 300
+        self.kernel_sizes      = '3'
+        self.static            = True
+        self.device            = 0
+        self.no_cuda           = False
+        self.snapshot          = None
+        self.train_path        = '../data/train.csv'
+        self.dev_path          = '../data/dev.csv'
+        self.test_path         = None
+        self.to_test_path      = '../data/to_test.csv'
+        self.w2v_model_path    = '../data/w2v_train.save'
+        self.data_path         = '../data/atec_nlp_sim_train.csv'
+        self.res_path          = None
+        self.word_Embedding    = True
+        self.pretrained_weight = None
+        self.cuda              = None
+
 if __name__ == '__main__':
     in_path = sys.argv[1]
     out_path  = sys.argv[2]
 
-    parser = argparse.ArgumentParser(description='')
+    # parser = argparse.ArgumentParser(description='')
     # learning
     # parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
     # parser.add_argument('-epochs', type=int, default=50, help='number of epochs for train [default: 256]')
@@ -46,8 +75,9 @@ if __name__ == '__main__':
     # parser.add_argument('-snapshot', type=str, default=None, help='filename of model snapshot [default: None]')
     # parser.add_argument('-predict', type=str, default=None, help='predict the sentence given')
     # parser.add_argument('-test', action='store_true', default=False, help='train or test')
-    args = parser.parse_args()
-    
+    # args = parser.parse_args()
+
+    args = paras()
     args.train_path     = '../data/train.csv'
     args.dev_path       = '../data/dev.csv'
     args.test_path      = in_path
