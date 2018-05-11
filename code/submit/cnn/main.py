@@ -15,9 +15,6 @@ from load_data import load_data
 from train import train, test
 from gensim.models import Word2Vec
 
-
-w2v_model_path = '../../../data/w2v_train.save'
-
 if __name__ == '__main__':
     # train_path = sys.argv[1]
     # test_path  = sys.argv[2]
@@ -59,6 +56,10 @@ if __name__ == '__main__':
     # load data
     text_field, label_field, train_data, train_iter,\
         dev_data, dev_iter = load_data(args)
+
+    # load data
+    text_field, label_field, train_data, train_iter,\
+        dev_data, dev_iter, test_data, test_iter = load_data(args)
 
     # text_field.build_vocab(train_data, dev_data)
 

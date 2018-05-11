@@ -99,12 +99,23 @@ def load_data(args):
     text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True)
     label_field   = data.Field(sequential=False, use_vocab=False)
     
+    # train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
+    # dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
+    
+    # text_field.build_vocab(train_data, dev_data)
+
+    # return text_field, label_field, \
+    #     train_data, train_iter,\
+    #     dev_data, dev_iter
+
+
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
-    
-    text_field.build_vocab(train_data, dev_data)
+    test_data, test_iter     = gen_iter(args.test_path, text_field, label_field, args)
+    text_field.build_vocab(train_data, dev_data, test_data)
 
     return text_field, label_field, \
         train_data, train_iter,\
-        dev_data, dev_iter
+        dev_data, dev_iter,
+        test_data, test_iter,
           
