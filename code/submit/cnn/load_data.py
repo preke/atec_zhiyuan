@@ -4,10 +4,10 @@ import pandas as pd
 import numpy as np
 import re
 import random
-from torchtext import data
+from env.torchtext import data
 from datetime import datetime
 import traceback  
-import torchtext.datasets as datasets
+import env.torchtext.datasets as datasets
 import pickle
 from gensim.models import Word2Vec
 import jieba

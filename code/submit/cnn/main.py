@@ -2,8 +2,9 @@
 import pandas as pd
 import numpy as np
 import torch
-import torchtext.data as data
-import torchtext.datasets as datasets
+import sys
+import env.torchtext.data as data
+import env.torchtext.datasets as datasets
 import argparse
 import os
 import datetime
