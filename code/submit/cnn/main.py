@@ -68,7 +68,7 @@ if __name__ == '__main__':
     args.embed_dim = 300
     args.word_Embedding = True
 
-    embedding_dict = Word2Vec.load(w2v_model_path)
+    embedding_dict = Word2Vec.load(args.w2v_model_path)
     word_vec_list = []
     oov = 0
     for idx, word in enumerate(text_field.vocab.itos):
