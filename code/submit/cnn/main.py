@@ -54,8 +54,8 @@ if __name__ == '__main__':
     args.w2v_model_path = '../../../data/w2v_train.save'
     args.data_path      = '../../../data/atec_nlp_sim_train.csv'
     # load data
-    text_field, label_field, train_data, train_iter,\
-        dev_data, dev_iter = load_data(args)
+    # text_field, label_field, train_data, train_iter,\
+    #     dev_data, dev_iter = load_data(args)
 
     # load data
     text_field, label_field, train_data, train_iter,\
