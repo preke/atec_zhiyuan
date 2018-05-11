@@ -85,6 +85,7 @@ def gen_iter_test(path, text_field, label_field, args):
                             format='csv',
                             skip_header=True,
                             fields=[
+                                    ('id', label_field),
                                     ('question1', text_field),
                                     ('question2', text_field)
                                     ])
@@ -157,7 +158,7 @@ def load_data(args):
     df_test = preprocess_test(args.test_path)
     df_test['q1_list'] = df_test['q1_list'].apply(lambda x: ' '.join(x))
     df_test['q2_list'] = df_test['q2_list'].apply(lambda x: ' '.join(x))
-    df = df[['id', 'q1_list', 'q2_list']]
+    df_test = df_test[['id', 'q1_list', 'q2_list']]
     df_test.to_csv(args.to_test_path, index=False, encoding='utf-8')
     
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
