@@ -73,6 +73,51 @@ def gen_iter(path, text_field, label_field, args):
                     repeat=False)
     return tmp_data, tmp_iter
 
+
+def gen_iter_test(path, text_field, label_field, args):
+    '''
+        Load TabularDataset from path,
+        then convert it into a iterator
+        return TabularDataset and iterator
+    '''
+    tmp_data = data.TabularDataset(
+                            path=path,
+                            format='csv',
+                            skip_header=True,
+                            fields=[
+                                    ('question1', text_field),
+                                    ('question2', text_field)
+                                    ])
+
+    tmp_iter = data.BucketIterator(
+                    tmp_data,
+                    batch_size=args.batch_size,
+                    sort_key=lambda x: len(x.question1) + len(x.question2),
+                    device=0, # 0 for GPU, -1 for CPU
+                    repeat=False)
+    return tmp_data, tmp_iter
+
+
+
+def preprocess(data_path):
+    '''
+    convert Chinese sentences to word lists
+    '''
+    df = pd.read_csv(data_path, sep='\t', names=['id', 'q1', 'q2', 'label'])
+    df['q1_list'] = df['q1'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    df['q2_list'] = df['q2'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    return df
+
+
+def preprocess_test(data_path):
+    '''
+    convert Chinese sentences to word lists
+    '''
+    df = pd.read_csv(data_path, sep='\t', names=['id', 'q1', 'q2'])
+    df['q1_list'] = df['q1'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    df['q2_list'] = df['q2'].apply(lambda x: [str(i.encode('utf-8')) for i in jieba.cut(x, cut_all=True, HMM=False) if len(i)])
+    return df
+
 def load_data(args):
     '''
         1. train the w2v_model
@@ -108,10 +153,14 @@ def load_data(args):
     #     train_data, train_iter,\
     #     dev_data, dev_iter
 
-
+    df_test = preprocess_test(args.test_path)
+    df_test['q1_list'] = df_test['q1_list'].apply(lambda x: ' '.join(x))
+    df_test['q2_list'] = df_test['q2_list'].apply(lambda x: ' '.join(x))
+    df_test.to_csv(args.test_path, index=False, encoding='utf-8')
+    
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
-    test_data, test_iter     = gen_iter(args.test_path, text_field, label_field, args)
+    test_data, test_iter   = gen_iter_test(args.test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data, test_data)
 
     return text_field, label_field, \
