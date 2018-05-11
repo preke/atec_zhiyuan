@@ -51,6 +51,7 @@ if __name__ == '__main__':
     args.train_path     = '../data/train.csv'
     args.dev_path       = '../data/dev.csv'
     args.test_path      = '../data/test.csv'
+    args.to_test_path      = '../data/to_test.csv'
     args.w2v_model_path = '../data/w2v_train.save'
     args.data_path      = '../data/atec_nlp_sim_train.csv'
     # load data

@@ -158,11 +158,11 @@ def load_data(args):
     df_test['q1_list'] = df_test['q1_list'].apply(lambda x: ' '.join(x))
     df_test['q2_list'] = df_test['q2_list'].apply(lambda x: ' '.join(x))
     df = df[['id', 'q1_list', 'q2_list']]
-    df_test.to_csv(args.test_path, index=False, encoding='utf-8')
+    df_test.to_csv(args.to_test_path, index=False, encoding='utf-8')
     
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
-    test_data, test_iter   = gen_iter_test(args.test_path, text_field, label_field, args)
+    test_data, test_iter   = gen_iter_test(args.to_test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data, test_data)
 
     return text_field, label_field, \
