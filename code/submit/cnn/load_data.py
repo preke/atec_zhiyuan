@@ -12,7 +12,7 @@ import pickle
 from gensim.models import Word2Vec
 import jieba
 
-jieba.load_userdict('../data/special_word.txt')
+jieba.load_userdict('data/special_word.txt')
 
 
 
@@ -90,11 +90,17 @@ def gen_iter_test(path, text_field, label_field, args):
                                     ('question2', text_field)
                                     ])
 
-    tmp_iter = data.BucketIterator(
-                    tmp_data,
+    # tmp_iter = data.BucketIterator(
+    #                 tmp_data,
+    #                 batch_size=args.batch_size,
+    #                 sort_key=lambda x: len(x.question1) + len(x.question2),
+    #                 device=-1, # 0 for GPU, -1 for CPU
+    #                 repeat=False)
+    tmp_iter = data.Iterator(
+                    dataset=tmp_data,
                     batch_size=args.batch_size,
-                    sort_key=lambda x: len(x.question1) + len(x.question2),
                     device=-1, # 0 for GPU, -1 for CPU
+                    shuffle=False,
                     repeat=False)
     return tmp_data, tmp_iter
 

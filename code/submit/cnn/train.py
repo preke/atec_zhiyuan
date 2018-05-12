@@ -111,13 +111,21 @@ def test(test_iter, model, args):
         results = model(question1, question2)
         for i in range(len(qid.data)):
             if results.data[i] >= threshold:
-                res.append([qid.data[i].cpu().numpy(), 1])
+                res.append([qid.data[i].numpy(), '1'])
             elif results.data[i] < threshold:
-                res.append([qid.data[i].cpu().numpy(), 0])
+                res.append([qid.data[i].numpy(), '0'])
     
-    res = sorted(res, key=lambda x: x[0])
-    res = pd.DataFrame(res, columns=['id', 'label'])
-    res.to_csv(args.res_path, sep='\t', index=False, header=None)
+    # res = sorted(res, key=lambda x: x[0])
+    with open(args.res_path, 'w') as f:
+        cnt = 1
+        for x in res:
+            f.write('{}\t{}\n'.format(x[0], x[1]))
+            cnt += 1
+    
+    
+
+    # res = pd.DataFrame(res, columns=['id', 'label'])
+    # res.to_csv(args.res_path, sep='\t', index=False, header=None)
 
 
 def save(model, save_dir, save_prefix, steps, acc):
