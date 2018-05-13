@@ -15,7 +15,7 @@ class CNN_Text(nn.Module):
         
         Ci = 1
         Co = args.kernel_num
-        K = args.kernel_size
+        K = int(args.kernel_size)
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
