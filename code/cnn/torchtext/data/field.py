@@ -3,7 +3,7 @@ from collections import Counter, OrderedDict
 import six
 import torch
 from torch.autograd import Variable
-from tqdm import tqdm
+# from tqdm import tqdm
 
 from .dataset import Dataset
 from .pipeline import Pipeline
