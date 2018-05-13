@@ -85,7 +85,7 @@ def eval(data_iter, model, args):
         for i in range(length):
             a = logit.data[i].cpu().numpy()
             b = target.data[i].cpu().numpy()
-            # print('%s,   %s' %(str(a), str(b)))
+            print('%s,   %s' %(str(a), str(b)))
             if a < 0.23 and b == 0:
                 corrects += 1
             elif a >= 0.23 and b == 1:
