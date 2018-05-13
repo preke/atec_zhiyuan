@@ -15,13 +15,14 @@ class CNN_Text(nn.Module):
         
         Ci = 1
         Co = args.kernel_num
-        Ks = args.kernel_sizes
+        K = args.kernel_size
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
             # pass
             self.embed.weight.data.copy_(args.pretrained_weight)
-        self.convs1 = nn.ModuleList([nn.Conv2d(Ci, Co, (K, D)) for K in Ks])
+        self.convs1 = nn.Conv2d(Ci, Co, (K, D))
+        # self.convs1 = nn.ModuleList([nn.Conv2d(Ci, Co, (K, D)) for K in Ks])
         # self.dropout = nn.Dropout(args.dropout)
         self.fc1 = nn.Linear(300, 300)
         self.dropout1 = nn.Dropout(p=0.1)
@@ -34,18 +35,18 @@ class CNN_Text(nn.Module):
     def forward(self, q1):
         q1 = self.embed(q1)
         q1 = q1.unsqueeze(1)  # (N, Ci, W, D)
-        q1 = [F.tanh(conv(q1)).squeeze(3) for conv in self.convs1]  # [(N, Co, W), ...]*len(Ks)
+        q1 = F.tanh(conv(q1)).squeeze(3) for conv in self.convs1 # [(N, Co, W), ...]*len(Ks)
         q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
         q1 = [F.tanh(i) for i in q1]
-        # q1 = self.fc1(q1)
-        # q1 = self.dropout(q1)
-        q1 = [self.fc1(q) for q in q1]
-        q1 = [self.dropout1(q) for q in q1]
-        q1 = [self.fc2(q) for q in q1]
-        q1 = [self.dropout2(q) for q in q1]
-        q1 = [self.fc3(q) for q in q1]
-        q1 = [self.dropout3(q) for q in q1]
-        q1 = torch.cat(q1, 1) # 64 * 300
+        q1 = self.fc1(q1)
+        q1 = self.dropout(q1)
+        # q1 = [self.fc1(q) for q in q1]
+        # q1 = [self.dropout1(q) for q in q1]
+        # q1 = [self.fc2(q) for q in q1]
+        # q1 = [self.dropout2(q) for q in q1]
+        # q1 = [self.fc3(q) for q in q1]
+        # q1 = [self.dropout3(q) for q in q1]
+        # q1 = torch.cat(q1, 1) # 64 * 300
         
         return q1
 
