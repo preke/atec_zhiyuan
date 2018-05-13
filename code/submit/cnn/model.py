@@ -34,12 +34,16 @@ class CNN_Text(nn.Module):
     
     def forward(self, q1):
         q1 = self.embed(q1)
-        q1 = q1.unsqueeze(1)  # (N, Ci, W, D)
-        q1 = F.tanh(self.convs1(q1)).squeeze(3) # [(N, Co, W), ...]*len(Ks)
+        # q1 = q1.unsqueeze(1)  # (N, Ci, W, D)
+        q1 = F.tanh(self.convs1(q1))# .squeeze(3) # [(N, Co, W), ...]*len(Ks)
         q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2)  # [(N, Co), ...]*len(Ks)
         q1 = F.tanh(q1)
         q1 = self.fc1(q1)
         q1 = self.dropout1(q1)
+        q1 = self.fc2(q1)
+        q1 = self.dropout2(q1)
+        q1 = self.fc3(q1)
+        q1 = self.dropout3(q1)
         # q1 = [self.fc1(q) for q in q1]
         # q1 = [self.dropout1(q) for q in q1]
         # q1 = [self.fc2(q) for q in q1]
