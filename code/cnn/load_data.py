@@ -37,7 +37,7 @@ def train_word2vec_model(df):
     for i, r in df.iterrows():
         corpus.append(r['q1_list'])
         corpus.append(r['q2_list'])
-    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=1)
+    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0)
     return word2vec_model
 
 
