@@ -11,7 +11,7 @@ import datetime
 import traceback
 import model
 
-from load_data import load_data
+from load_data import load_data, load_glove_as_dict
 from train import train, test
 from gensim.models import Word2Vec
 
@@ -48,16 +48,16 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = '../data/train.csv'
-    args.dev_path       = '../data/dev.csv'
-    args.test_path      = '../data/test.csv'
-    args.to_test_path   = '../data/to_test.csv'
-    args.w2v_model_path = '../data/w2v_train.save'
-    args.data_path      = '../data/atec_nlp_sim_train.csv'
-    args.res_path       = '../data/res.csv'
+    args.train_path     = 'data/train.csv'
+    args.dev_path       = 'data/dev.csv'
+    args.test_path      = 'data/test.csv'
+    args.to_test_path   = 'data/to_test.csv'
+    args.w2v_model_path = 'data/w2v_train.save'
+    args.data_path      = 'data/atec_nlp_sim_train.csv'
+    args.res_path       = 'data/res.csv'
 
-    glove_path = '../data/wordvec.txt'
-    w2v_model_path = '../data/w2v_train.save'
+    glove_path = 'data/wordvec.txt'
+    w2v_model_path = 'data/w2v_train.save'
 
     # load data
     # text_field, label_field, train_data, train_iter,\
