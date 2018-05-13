@@ -149,7 +149,7 @@ def load_data(args):
     # add qoura
     with open('data/qoura_train.tsv' , 'r') as fqoura, open('data/combine.csv', 'w') as fcomb:
         for line in fqoura:
-            label, q1, q2, pid = line.strip()
+            label, q1, q2, pid = line.strip().split('\t')
             fcomb.write('%s\t%s\t%s\n' %(q1, q2, label))
     with open(args.train_path , 'r') as ftrain, open('data/combine.csv', 'a') as fcomb:
         for line in ftrain:
