@@ -35,7 +35,7 @@ def train_word2vec_model(df):
     for i, r in df.iterrows():
         corpus.append(r['q1_list'])
         corpus.append(r['q2_list'])
-    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=1)
+    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0)
     return word2vec_model
 
 
@@ -69,7 +69,7 @@ def gen_iter(path, text_field, label_field, args):
                     tmp_data,
                     batch_size=args.batch_size,
                     sort_key=lambda x: len(x.question1) + len(x.question2),
-                    device=-1, # 0 for GPU, -1 for CPU
+                    device=0, # 0 for GPU, -1 for CPU
                     repeat=False)
     return tmp_data, tmp_iter
 
@@ -133,20 +133,20 @@ def load_data(args):
         3. load the data
         load as pairs
     '''
-    df = preprocess(args.data_path)
-    #print ('Positive in set: %s' %str(len(df[df['label'] == 1])))
-    #print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
-    word2vec_model = train_word2vec_model(df)
-    word2vec_model.save(args.w2v_model_path)
-    df = df[['q1_list', 'q2_list', 'label']]
-    df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
-    df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
-    train_df = df.head(int(len(df)*0.9))
-    dev_df   = df.tail(int(len(df)*0.1))
-    # print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
-    # print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
-    train_df.to_csv(args.train_path, index=False, encoding='utf-8')
-    dev_df.to_csv(args.dev_path, index=False, encoding='utf-8')
+    # df = preprocess(args.data_path)
+    # #print ('Positive in set: %s' %str(len(df[df['label'] == 1])))
+    # #print ('Negative in set: %s' %str(len(df[df['label'] == 0])))
+    # word2vec_model = train_word2vec_model(df)
+    # word2vec_model.save(args.w2v_model_path)
+    # df = df[['q1_list', 'q2_list', 'label']]
+    # df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
+    # df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
+    # train_df = df.head(int(len(df)*0.9))
+    # dev_df   = df.tail(int(len(df)*0.1))
+    # # print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
+    # # print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
+    # train_df.to_csv(args.train_path, index=False, encoding='utf-8')
+    # dev_df.to_csv(args.dev_path, index=False, encoding='utf-8')
 
     
     text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True)

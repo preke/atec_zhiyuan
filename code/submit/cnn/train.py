@@ -9,8 +9,8 @@ import pandas as pd
 import traceback
 
 def train(train_iter, dev_iter, model, args):
-    # if args.cuda:
-    #     model.cuda()
+    if args.cuda:
+        model.cuda()
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
     optimizer = torch.optim.Adam(parameters, lr=args.lr)
     steps = 0
@@ -23,8 +23,8 @@ def train(train_iter, dev_iter, model, args):
         model.train()
         for batch in train_iter:
             question1, question2, target = batch.question1, batch.question2, batch.label
-            # if args.cuda:
-            #     question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
+            if args.cuda:
+                question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
             optimizer.zero_grad()
             logit = model(question1, question2)
             target = target.type(torch.cuda.FloatTensor)
@@ -72,14 +72,14 @@ def eval(data_iter, model, args):
     corrects = 0
     for batch in data_iter:
         question1, question2, target = batch.question1, batch.question2, batch.label
-        # if args.cuda:
-        #     question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
+        if args.cuda:
+            question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
 
         logit = model(question1, question2)
 
         
-        # target = target.type(torch.cuda.FloatTensor)
-        target = target.type(torch.FloatTensor)
+        target = target.type(torch.cuda.FloatTensor)
+        # target = target.type(torch.FloatTensor)
 
         length = len(target.data)
         for i in range(length):
@@ -111,9 +111,10 @@ def test(test_iter, model, args):
         results = model(question1, question2)
         for i in range(len(qid.data)):
             if results.data[i] >= threshold:
-                res.append([qid.data[i].numpy(), '1'])
-            elif results.data[i] < threshold:
-                res.append([qid.data[i].numpy(), '0'])
+                res.append([qid.data[i].cpu().numpy(), '1'])
+            #elif results.data[i] < threshold:
+            else:
+                res.append([qid.data[i].cpu().numpy(), '0'])
     
     # res = sorted(res, key=lambda x: x[0])
     with open(args.res_path, 'w') as f:
@@ -122,6 +123,10 @@ def test(test_iter, model, args):
             f.write('{}\t{}\n'.format(x[0], x[1]))
             cnt += 1
     
+    with open(args.res_path, 'r') as fin:
+        for line in fin:
+            lineno, label = line.strip().split('\t')
+            lineno = int(lineno)
     
 
     # res = pd.DataFrame(res, columns=['id', 'label'])
