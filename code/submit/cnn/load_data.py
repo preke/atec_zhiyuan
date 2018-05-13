@@ -57,7 +57,7 @@ def gen_iter(path, text_field, label_field, args):
     '''
     tmp_data = data.TabularDataset(
                             path=path,
-                            format='csv',
+                            format='tsv',
                             skip_header=True,
                             fields=[
                                     ('question1', text_field),
@@ -82,7 +82,7 @@ def gen_iter_test(path, text_field, label_field, args):
     '''
     tmp_data = data.TabularDataset(
                             path=path,
-                            format='csv',
+                            format='tsv',
                             skip_header=True,
                             fields=[
                                     ('id', label_field),
@@ -145,8 +145,17 @@ def load_data(args):
     dev_df   = df.tail(int(len(df)*0.1))
     # print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
     # print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
-    train_df.to_csv(args.train_path, index=False, encoding='utf-8')
-    dev_df.to_csv(args.dev_path, index=False, encoding='utf-8')
+    train_df.to_csv(args.train_path, index=False, encoding='utf-8', sep='\t')
+    # add qoura
+    with open('qoura_train.tsv' , 'r') as fqoura, open('combine.csv', 'w') as fcomb:
+        for line in fqoura:
+            label, q1, q2, pid = line.strip()
+            fcomb.write('%s\t%s\t%s\n' %(q1, q2, label))
+    with open(args.train_path , 'r') as ftrain, open('combine.csv', 'a') as fcomb:
+        for line in ftrain:
+            fcomb.write(line)
+
+    dev_df.to_csv(args.dev_path, index=False, encoding='utf-8', sep='\t')
 
     
     text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True)
@@ -165,9 +174,9 @@ def load_data(args):
     df_test['q1_list'] = df_test['q1_list'].apply(lambda x: ' '.join(x))
     df_test['q2_list'] = df_test['q2_list'].apply(lambda x: ' '.join(x))
     df_test = df_test[['id', 'q1_list', 'q2_list']]
-    df_test.to_csv(args.to_test_path, index=False, encoding='utf-8')
+    df_test.to_csv(args.to_test_path, index=False, encoding='utf-8', sep='\t')
     
-    train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
+    train_data, train_iter = gen_iter(combine, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
     test_data, test_iter   = gen_iter_test(args.to_test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data, test_data)
