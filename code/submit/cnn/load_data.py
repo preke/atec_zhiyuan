@@ -142,7 +142,10 @@ def load_data(args):
     df['q1_list'] = df['q1_list'].apply(lambda x: ' '.join(x))
     df['q2_list'] = df['q2_list'].apply(lambda x: ' '.join(x))
     train_df = df.head(int(len(df)*0.9))
-    train_df_rev = train_df[['q2_list', 'q1_list', 'label']]
+    train_df_rev = pd.DataFrame()
+    train_df_rev['q1_list'] = train_df['q2_list']
+    train_df_rev['q2_list'] = train_df['q1_list']
+    train_df_rev['label'] = train_df['label']
     train_df = pd.concat([train_df, train_df_rev])
     dev_df   = df.tail(int(len(df)*0.1))
     # print 'Positive in dev set', len(dev_df[dev_df['label'] == 1])
