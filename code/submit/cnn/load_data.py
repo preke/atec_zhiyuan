@@ -147,11 +147,11 @@ def load_data(args):
     # print 'Negative in dev set', len(dev_df[dev_df['label'] == 0])
     train_df.to_csv(args.train_path, index=False, encoding='utf-8', sep='\t')
     # add qoura
-    with open('qoura_train.tsv' , 'r') as fqoura, open('combine.csv', 'w') as fcomb:
+    with open('../data/qoura_train.tsv' , 'r') as fqoura, open('../data/combine.csv', 'w') as fcomb:
         for line in fqoura:
             label, q1, q2, pid = line.strip()
             fcomb.write('%s\t%s\t%s\n' %(q1, q2, label))
-    with open(args.train_path , 'r') as ftrain, open('combine.csv', 'a') as fcomb:
+    with open(args.train_path , 'r') as ftrain, open('../data/combine.csv', 'a') as fcomb:
         for line in ftrain:
             fcomb.write(line)
 
@@ -176,7 +176,7 @@ def load_data(args):
     df_test = df_test[['id', 'q1_list', 'q2_list']]
     df_test.to_csv(args.to_test_path, index=False, encoding='utf-8', sep='\t')
     
-    train_data, train_iter = gen_iter(combine, text_field, label_field, args)
+    train_data, train_iter = gen_iter('../data/combine.csv', text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
     test_data, test_iter   = gen_iter_test(args.to_test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data, test_data)
