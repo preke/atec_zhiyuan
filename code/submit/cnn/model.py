@@ -39,7 +39,7 @@ class CNN_Text(nn.Module):
         q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2)  # [(N, Co), ...]*len(Ks)
         q1 = F.tanh(q1)
         q1 = self.fc1(q1)
-        q1 = self.dropout(q1)
+        q1 = self.dropout1(q1)
         # q1 = [self.fc1(q) for q in q1]
         # q1 = [self.dropout1(q) for q in q1]
         # q1 = [self.fc2(q) for q in q1]
