@@ -92,7 +92,7 @@ if __name__ == '__main__':
     print('oov: %s' %str(oov))
     print(args.embed_num)
     args.pretrained_weight = wordvec_matrix
-    args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
+    # args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
 
 
     cnn = model.CNN_Sim(args)
