@@ -40,8 +40,8 @@ def train(train_iter, dev_iter, model, args):
                 corrects = 0 
                 length = len(target.data)
                 for i in range(length):
-                    a = logit.data[i]
-                    b = target.data[i]
+                    a = logit[i].data
+                    b = target[i].data
                     if a < 0.5 and b == 0:
                         corrects += 1
                     elif a >= 0.5 and b == 1:
@@ -83,8 +83,8 @@ def eval(data_iter, model, args):
 
         length = len(target.data)
         for i in range(length):
-            a = logit.data[i].cpu().numpy()
-            b = target.data[i].cpu().numpy()
+            a = logit[i].data.cpu().numpy()
+            b = target[i].data.cpu().numpy()
             print('%s,   %s' %(str(a), str(b)))
             if a < 0.5 and b == 0:
                 corrects += 1
@@ -110,11 +110,11 @@ def test(test_iter, model, args):
         #     qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
         for i in range(len(qid.data)):
-            if results.data[i] >= threshold:
-                res.append([qid.data[i].cpu().numpy(), '1'])
+            if results[i].data >= threshold:
+                res.append([qid[i].data.cpu().numpy(), '1'])
             #elif results.data[i] < threshold:
             else:
-                res.append([qid.data[i].cpu().numpy(), '0'])
+                res.append([qid[i].data.cpu().numpy(), '0'])
     
     # res = sorted(res, key=lambda x: x[0])
     with open(args.res_path, 'w') as f:
