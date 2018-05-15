@@ -83,7 +83,10 @@ def eval(data_iter, model, args):
         # target = target.type(torch.FloatTensor)
 
         length = len(target.data)
-        tp, fp, tn, fn = 0
+        tp = 0
+        fp = 0
+        tn = 0
+        fn = 0
         threshold = 0.5
         for i in range(length):
             a = logit[i].data.cpu().numpy()
