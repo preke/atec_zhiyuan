@@ -44,7 +44,7 @@ def train(train_iter, dev_iter, model, args):
                 length = len(target.data)
                 logit = logit.data.max(1)[1].cpu().numpy()
                 res_list.extend(logit)
-                label_list.extend(label.data.cpu().numpy())
+                label_list.extend(target.data.cpu().numpy())
                 f1 = f1_score(res_list, label_list)
 
                 # for i in range(length):
@@ -88,7 +88,7 @@ def eval(data_iter, model, args):
         target = target.type(torch.cuda.FloatTensor)
         logit = logit.data.max(1)[1].cpu().numpy()
         res_list.extend(logit)
-        label_list.extend(label.data.cpu().numpy())
+        label_list.extend(target.data.cpu().numpy())
         
     f1 = f1_score(res_list, label_list)
     #     # target = target.type(torch.FloatTensor)
