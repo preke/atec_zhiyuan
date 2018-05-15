@@ -43,9 +43,9 @@ def train(train_iter, dev_iter, model, args):
                     a = logit[i].data
                     b = target[i].data
 
-                    if a < 0.5 and b == 0:
+                    if a < 0.3 and b == 0:
                         corrects += 1
-                    elif a >= 0.5 and b == 1:
+                    elif a >= 0.3 and b == 1:
                         corrects += 1
                     else:
                         pass
@@ -87,9 +87,9 @@ def eval(data_iter, model, args):
             a = logit[i].data.cpu().numpy()
             b = target[i].data.cpu().numpy()
             print('%s,   %s' %(str(a), str(b)))
-            if a < 0.5 and b == 0:
+            if a < 0.3 and b == 0:
                 corrects += 1
-            elif a >= 0.5 and b == 1:
+            elif a >= 0.3 and b == 1:
                 corrects += 1
             else:
                 pass
