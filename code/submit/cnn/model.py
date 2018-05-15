@@ -56,8 +56,9 @@ class CNN_Sim(nn.Module):
         cnn1 = self.cnn1
         q1 = cnn1.forward(q1)
         q2 = cnn1.forward(q2)
-        print q1.shape
-        print q2.shape
+        
+        ans = torch.cat(q1, q2)
+        print ans.shape
         # cos_ans = F.cosine_similarity(q1, q2)
         # print(type(cos_ans))
         return cos_ans
