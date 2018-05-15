@@ -75,7 +75,7 @@ class CNN_Sim(nn.Module):
         # ans = self.fc4(ans)
         # ans = ans.squeeze(1)
         # print ans.shape
-        cos_ans = F.cosine_similarity(q1, q2)
+        ans = F.cosine_similarity(q1, q2)
         # print(type(cos_ans))
         return ans
 
