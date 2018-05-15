@@ -13,7 +13,7 @@ class Decomposable_Attention(nn.Module):
         self.args = args
         self.V    = args.embed_num
         self.D    = args.embed_dim
-        self.embed = nn.Embedding(V, D)
+        self.embed = nn.Embedding(self.V, self.D)
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
