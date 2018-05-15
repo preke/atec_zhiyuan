@@ -14,7 +14,7 @@ def train(train_iter, dev_iter, model, args):
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
     optimizer = torch.optim.Adam(parameters, lr=args.lr)
     steps = 0
-    best_acc = 0
+    best_f1 = 0
     last_step = 0
     
     
@@ -43,9 +43,9 @@ def train(train_iter, dev_iter, model, args):
                     a = logit[i].data
                     b = target[i].data
 
-                    if a < 0.3 and b == 0:
+                    if a < 0.5 and b == 0:
                         corrects += 1
-                    elif a >= 0.3 and b == 1:
+                    elif a >= 0.5 and b == 1:
                         corrects += 1
                     else:
                         pass
@@ -56,12 +56,12 @@ def train(train_iter, dev_iter, model, args):
                                                                 corrects,
                                                                 batch.batch_size))
             if steps % args.test_interval == 0:
-                dev_acc = eval(dev_iter, model, args)
-                if dev_acc > best_acc:
-                    best_acc = dev_acc
+                dev_f1 = eval(dev_iter, model, args)
+                if dev_f1 > best_f1:
+                    best_f1 = dev_f1
                     last_step = steps
                     if args.save_best:
-                        save(model, args.save_dir, 'best', steps, best_acc)
+                        save(model, args.save_dir, 'best', steps, best_f1)
                 else:
                     if steps - last_step >= args.early_stop:
                         print('early stop by {} steps.'.format(args.early_stop))
@@ -83,23 +83,27 @@ def eval(data_iter, model, args):
         # target = target.type(torch.FloatTensor)
 
         length = len(target.data)
+        tp, fp, tn, fn = 0
+        threshold = 0.5
         for i in range(length):
             a = logit[i].data.cpu().numpy()
             b = target[i].data.cpu().numpy()
-            print('%s,   %s' %(str(a), str(b)))
-            if a < 0.3 and b == 0:
-                corrects += 1
-            elif a >= 0.3 and b == 1:
-                corrects += 1
-            else:
-                pass
-        
+            # print('%s,   %s' %(str(a), str(b)))
+            if a < threshold and b == 0:
+                tn += 1
+            elif a >= threshold and b == 1:
+                tp += 1
+            elif a < threshold and b == 1:
+                fn += 1
+            elif a >= threshold and b == 0:
+                fp += 1
+        precision = float(tp)/float(tp+fp)
+        recall = float(tp)/float(tp+fn)
+        f1 = 2*(precision*recall)/float(precision + recall)        
     size = float(len(data_iter.dataset))
-    accuracy = 100.0 * float(corrects)/size
-    print('\nEvaluation -  acc: {:.4f}%({}/{}) \n'.format(accuracy, 
-                                                          corrects, 
-                                                          size))
-    return accuracy
+    # accuracy = 100.0 * float(corrects)/size
+    print('\nEvaluation -  f1: {:.4f} \n'.format(f1))
+    return f1
 
 
 def test(test_iter, model, args):
@@ -134,10 +138,10 @@ def test(test_iter, model, args):
     # res.to_csv(args.res_path, sep='\t', index=False, header=None)
 
 
-def save(model, save_dir, save_prefix, steps, acc):
+def save(model, save_dir, save_prefix, steps, f1):
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     save_prefix = os.path.join(save_dir, save_prefix)
-    save_path = '{}_steps_{}_{}.pt'.format(save_prefix, steps, acc)
+    save_path = '{}_steps_{}_{}.pt'.format(save_prefix, steps, f1)
     torch.save(model.state_dict(), save_path)
 
