@@ -23,12 +23,7 @@ class Decomposable_Attention(nn.Module):
         self.mlp_h = self._mlp_layers(2 * self.D, self.D)
         self.final_linear = nn.Linear(
             self.D, 2, bias=True)
-        '''initialize parameters'''
-        for m in self.modules():
-            # print m
-            if isinstance(m, nn.Linear):
-                m.weight.data.normal_(0, self.para_init)
-                m.bias.data.normal_(0, self.para_init)
+        
 
     def _mlp_layers(self, input_dim, output_dim):
         mlp_layers = []
