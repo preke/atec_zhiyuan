@@ -40,7 +40,7 @@ def train(train_iter, dev_iter, model, args):
                 corrects = 0 
                 length = len(target.data)
                 for i in range(length):
-                    a = logit[i].data
+                    a = logit[i].data.max(1)[1].cpu().numpy()
                     b = target[i].data
                     print a
                     if a < 0.5 and b == 0:
@@ -89,7 +89,7 @@ def eval(data_iter, model, args):
         fn = 0.00000001
         threshold = 0.5
         for i in range(length):
-            a = logit[i].data.cpu().numpy()
+            a = logit[i].data.max(1)[1].cpu().numpy()
             b = target[i].data.cpu().numpy()
             # print('%s,   %s' %(str(a), str(b)))
             if a < threshold and b == 0:
