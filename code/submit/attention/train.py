@@ -42,7 +42,7 @@ def train(train_iter, dev_iter, model, args):
                 for i in range(length):
                     a = logit[i].data
                     b = target[i].data
-
+                    print a
                     if a < 0.5 and b == 0:
                         corrects += 1
                     elif a >= 0.5 and b == 1:
