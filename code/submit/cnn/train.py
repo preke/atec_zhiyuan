@@ -21,8 +21,11 @@ def train(train_iter, dev_iter, model, args):
     
     for epoch in range(1, args.epochs+1): 
         print('\nEpoch:%s\n'%epoch)
+
         model.train()
         for batch in train_iter:
+            res_list = []
+            label_list = []
             question1, question2, target = batch.question1, batch.question2, batch.label
             if args.cuda:
                 question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
