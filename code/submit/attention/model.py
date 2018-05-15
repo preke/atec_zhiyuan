@@ -81,7 +81,7 @@ class Decomposable_Attention(nn.Module):
         input_combine = torch.cat((sent1_output, sent2_output), 1)
         h = self.mlp_h(input_combine)
         h = self.final_linear(h)
-        h = nn.logSoftmax(h, dim=1)
+        h = nn.LogSoftmax(h, dim=1)
         return h
 
 
