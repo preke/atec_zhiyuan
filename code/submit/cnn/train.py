@@ -83,10 +83,10 @@ def eval(data_iter, model, args):
         # target = target.type(torch.FloatTensor)
 
         length = len(target.data)
-        tp = 0
-        fp = 0
-        tn = 0
-        fn = 0
+        tp = 0.00000001
+        fp = 0.00000001
+        tn = 0.00000001
+        fn = 0.00000001
         threshold = 0.5
         for i in range(length):
             a = logit[i].data.cpu().numpy()
@@ -101,8 +101,8 @@ def eval(data_iter, model, args):
             elif a >= threshold and b == 0:
                 fp += 1
         # print tn, tp, fn, fp
-        precision = float(tp)/float(tp+fp) + 0.00000001
-        recall = float(tp)/float(tp+fn) + 0.00000001
+        precision = float(tp)/float(tp+fp) 
+        recall = float(tp)/float(tp+fn)
         f1 = 2*(precision*recall)/float(precision + recall)        
     size = float(len(data_iter.dataset))
     # accuracy = 100.0 * float(corrects)/size
