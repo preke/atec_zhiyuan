@@ -51,16 +51,30 @@ class CNN_Text(nn.Module):
 class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
-        self.cnn1 = CNN_Text(args)
+        self.cnn = CNN_Text(args)
+        self.fc1 = nn.Linear(600, 300)
+        self.dropout1 = nn.Dropout(p=0.1)
+        self.fc2 = nn.Linear(300, 100)
+        self.dropout2 = nn.Dropout(p=0.1)
+        self.fc3 = nn.Linear(100, 2)
+        self.dropout3 = nn.Dropout(p=0.1)
+        self.fc4 = nn.Linear(2, 1)
+        self.dropout4 = nn.Dropout(p=0.1)
     def forward(self, q1, q2):
-        cnn1 = self.cnn1
-        q1 = cnn1.forward(q1)
-        q2 = cnn1.forward(q2)
+        cnn = self.cnn
+        q1 = cnn.forward(q1)
+        q2 = cnn.forward(q2)
         
         ans = torch.cat([q1, q2], 1)
-        print ans.shape
+        ans = self.fc1(ans)
+        ans = self.dropout1(ans)
+        ans = self.fc2(ans)
+        ans = self.dropout2(ans)
+        ans = self.fc3(ans)
+        ans = self.dropout3(ans)
+        ans = self.fc4(ans)
         # cos_ans = F.cosine_similarity(q1, q2)
         # print(type(cos_ans))
-        return cos_ans
+        return ans
 
 
