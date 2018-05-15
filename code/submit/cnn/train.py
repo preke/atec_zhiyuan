@@ -100,6 +100,7 @@ def eval(data_iter, model, args):
                 fn += 1
             elif a >= threshold and b == 0:
                 fp += 1
+        print tn, tp, fn, fp
         precision = float(tp)/float(tp+fp)
         recall = float(tp)/float(tp+fn)
         f1 = 2*(precision*recall)/float(precision + recall)        
