@@ -40,8 +40,8 @@ def train(train_iter, dev_iter, model, args):
                 corrects = 0 
                 length = len(target.data)
                 for i in range(length):
-                    a = logit[i].data
-                    b = target[i].data
+                    a = logit.data[i]
+                    b = target.data[i]
                     if a < 0.5 and b == 0:
                         corrects += 1
                     elif a >= 0.5 and b == 1:
@@ -76,15 +76,11 @@ def eval(data_iter, model, args):
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
 
         logit = model(question1, question2)
-
-        
         target = target.type(torch.cuda.FloatTensor)
-        # target = target.type(torch.FloatTensor)
-
         length = len(target.data)
         for i in range(length):
-            a = logit[i].data.cpu().numpy()
-            b = target[i].data.cpu().numpy()
+            a = logit.data[i]
+            b = target.data[i]
             # print('%s,   %s' %(str(a), str(b)))
             if a < 0.5 and b == 0:
                 corrects += 1
@@ -102,35 +98,27 @@ def eval(data_iter, model, args):
 
 
 def test(test_iter, model, args):
+    accuracy = 0.0
+    total_num = 0.0
     threshold = 0.5
-    res = []
     for batch in test_iter:
-        qid, question1, question2 = batch.id, batch.question1, batch.question2
-        # if args.cuda:
-        #     qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
+        question1, question2, label = batch.question1, batch.question2, batch.label
+        if args.cuda:
+            question1, question2, label = question1.cuda(), question2.cuda(), label.cuda()
+        label = label.type(torch.cuda.FloatTensor)   
         results = model(question1, question2)
-        for i in range(len(qid.data)):
-            if results[i].data >= threshold:
-                res.append([qid[i].data.cpu().numpy(), '1'])
-            #elif results.data[i] < threshold:
+        for i in range(len(label.data)):
+            if (label.data[i] == 1) and (results.data[i] >= threshold):
+                accuracy += 1.0
+            elif (label.data[i] == 0) and (results.data[i] < threshold):
+                accuracy += 1.0
             else:
-                res.append([qid[i].data.cpu().numpy(), '0'])
-    
-    # res = sorted(res, key=lambda x: x[0])
-    with open(args.res_path, 'w') as f:
-        cnt = 1
-        for x in res:
-            f.write('{}\t{}\n'.format(x[0], x[1]))
-            cnt += 1
-    
-    with open(args.res_path, 'r') as fin:
-        for line in fin:
-            lineno, label = line.strip().split('\t')
-            lineno = int(lineno)
-    
-
-    # res = pd.DataFrame(res, columns=['id', 'label'])
-    # res.to_csv(args.res_path, sep='\t', index=False, header=None)
+                pass
+            
+        total_num += len(label.data)
+    # print(accuracy)
+    # print(total_num)
+    print('Threshold is: %s, Accuracy is: %s' %(str(threshold), str(accuracy/total_num)))
 
 
 def save(model, save_dir, save_prefix, steps, acc):

@@ -69,7 +69,7 @@ def gen_iter(path, text_field, label_field, args):
                     tmp_data,
                     batch_size=args.batch_size,
                     sort_key=lambda x: len(x.question1) + len(x.question2),
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=-1, # 0 for GPU, -1 for CPU
                     repeat=False)
     return tmp_data, tmp_iter
 
@@ -85,7 +85,7 @@ def gen_iter_test(path, text_field, label_field, args):
                             format='tsv',
                             skip_header=False,
                             fields=[
-                                    ('id', label_field),
+                                    ('pid', label_field),
                                     ('question1', text_field),
                                     ('question2', text_field)
                                     ])
@@ -99,7 +99,7 @@ def gen_iter_test(path, text_field, label_field, args):
     tmp_iter = data.Iterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=-1, # 0 for GPU, -1 for CPU
                     shuffle=False,
                     repeat=False)
     return tmp_data, tmp_iter
@@ -185,7 +185,7 @@ def load_data(args):
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
     dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
     test_data, test_iter   = gen_iter_test(args.to_test_path, text_field, label_field, args)
-    text_field.build_vocab(train_data, dev_data, test_data)
+    text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
         train_data, train_iter,\

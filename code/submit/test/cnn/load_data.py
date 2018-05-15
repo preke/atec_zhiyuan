@@ -69,7 +69,7 @@ def gen_iter(path, text_field, label_field, args):
                     tmp_data,
                     batch_size=args.batch_size,
                     sort_key=lambda x: len(x.question1) + len(x.question2),
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=-1, # 0 for GPU, -1 for CPU
                     repeat=False)
     return tmp_data, tmp_iter
 
@@ -99,7 +99,7 @@ def gen_iter_test(path, text_field, label_field, args):
     tmp_iter = data.Iterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=-1, # 0 for GPU, -1 for CPU
                     shuffle=False,
                     repeat=False)
     return tmp_data, tmp_iter
@@ -163,7 +163,7 @@ def load_data(args):
     dev_df.to_csv(args.dev_path, index=False, encoding='utf-8', sep='\t', header=None)
 
     
-    text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>')
+    text_field    = data.Field(sequential=True, use_vocab=True, batch_first=True)
     label_field   = data.Field(sequential=False, use_vocab=False)
     
     # train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)

@@ -20,7 +20,7 @@ class paras(object):
     def __init__(self):
         self.lr                = 0.001
         self.epochs            = 50
-        self.batch_size        = 32
+        self.batch_size        = 16
         self.log_interval      = 100
         self.save_interval     = 500
         self.save_dir          = 'snapshot'

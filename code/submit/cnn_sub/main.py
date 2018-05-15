@@ -97,7 +97,7 @@ if __name__ == '__main__':
     # text_field.build_vocab(train_data, dev_data)
 
 
-    args.embed_num = 7563
+    args.embed_num = 7565
     args.embed_dim = 300
     args.word_Embedding = True
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()
 
-    cnn.load_state_dict(torch.load('snapshot/best_steps_90600_79.9186578546.pt', map_location=lambda storage, loc:storage))
+    cnn.load_state_dict(torch.load('snapshot/best_steps_30300_79.0289781393.pt', map_location=lambda storage, loc:storage))
     # if args.cuda:
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()

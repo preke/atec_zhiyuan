@@ -85,7 +85,7 @@ def eval(data_iter, model, args):
         for i in range(length):
             a = logit[i].data.cpu().numpy()
             b = target[i].data.cpu().numpy()
-            # print('%s,   %s' %(str(a), str(b)))
+            print('%s,   %s' %(str(a), str(b)))
             if a < 0.5 and b == 0:
                 corrects += 1
             elif a >= 0.5 and b == 1:
@@ -105,7 +105,7 @@ def test(test_iter, model, args):
     threshold = 0.5
     res = []
     for batch in test_iter:
-        qid, question1, question2 = batch.id, batch.question1, batch.question2
+        qid, question1, question2 = batch.pid, batch.question1, batch.question2
         # if args.cuda:
         #     qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
