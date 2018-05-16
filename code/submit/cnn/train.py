@@ -47,7 +47,7 @@ def train(train_iter, dev_iter, model, args):
             steps += 1
             if steps % args.log_interval == 0:
                 print logit
-                logit1 = logit.max(1).cpu().numpy()
+                logit1 = logit.max(1)
                 print logit1
                 logit2 = logit.max(1)[1]
                 print logit2
