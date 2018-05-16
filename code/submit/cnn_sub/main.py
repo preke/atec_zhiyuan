@@ -28,8 +28,8 @@ class paras(object):
         self.save_best         = True
         self.embed_dim         = 300
         self.embed_num         = 300
-        self.kernel_sizes      = '3'
-        self.kernel_num        = 300
+        self.kernel_sizes      = '1,2,3'
+        self.kernel_num        = 100
         self.static            = True
         self.device            = -1
         self.no_cuda           = True
