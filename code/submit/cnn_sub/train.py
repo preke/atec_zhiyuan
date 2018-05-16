@@ -21,25 +21,35 @@ def train(train_iter, dev_iter, model, args):
     
     for epoch in range(1, args.epochs+1): 
         print('\nEpoch:%s\n'%epoch)
+
         model.train()
         for batch in train_iter:
+            res_list = []
+            label_list = []
             question1, question2, target = batch.question1, batch.question2, batch.label
             if args.cuda:
                 question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
             optimizer.zero_grad()
+            
             logit = model(question1, question2)
+            # target = target.type(torch.cuda.LongTensor)
             target = target.type(torch.cuda.FloatTensor)
             criterion = nn.MSELoss()
             loss = criterion(logit, target)
+            
+            # loss = F.cross_entropy(logit, target)
+            
             loss.backward()
             optimizer.step()
             
             
-
+            
             steps += 1
             if steps % args.log_interval == 0:
-                logit = logit.data.max(1)[1].cpu().numpy()
+                logit = logit.data.cpu().numpy()
                 res_list.extend(logit)
+                threshold = 0.5    
+                res_list = [1 if i > threshold else 0 for i in res_list]
                 label_list.extend(target.data.cpu().numpy())
                 acc = accuracy_score(res_list, label_list)
                 f1 = f1_score(res_list, label_list)
@@ -68,9 +78,11 @@ def eval(data_iter, model, args):
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
         target = target.type(torch.cuda.FloatTensor)
-        logit = logit.data.max(1)[1].cpu().numpy()
+        logit = logit.data.cpu().numpy()
         res_list.extend(logit)
-        label_list.extend(target.data.cpu().numpy())        
+        label_list.extend(target.data.cpu().numpy()) 
+    threshold = 0.5
+    res_list = [1 if i > threshold else 0 for i in res_list]       
     f1 = f1_score(res_list, label_list)        
     print('\nEvaluation -  f1: {:.4f} \n'.format(f1))
     return f1
