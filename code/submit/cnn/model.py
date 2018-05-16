@@ -65,9 +65,11 @@ class CNN_Sim(nn.Module):
         cnn = self.cnn
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
+        print q1.shape
         q1 = torch.sum(q1, dim=1)
         q2 = torch.sum(q2, dim=1)
-        dot_value = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 1, 300)).view(q1.size()[0], 1)
+        print q2.shape
+        dot_value = torch.bmm(q1, q2)
         dist_value = self.dist(q1, q2).view(q1.size()[0], 1)
 
         ans = torch.cat((dot_value, dist_value), dim=1)
