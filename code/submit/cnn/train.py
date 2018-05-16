@@ -33,8 +33,9 @@ def train(train_iter, dev_iter, model, args):
             logit = model(question1, question2)
             target = target.type(torch.cuda.FloatTensor)
             # criterion = nn.MSELoss()
-            criterion = F.cross_entropy()
-            loss = criterion(logit, target)
+            # loss = criterion(logit, target)
+            loss = F.cross_entropy(logit, target)
+            
             loss.backward()
             optimizer.step()
             
