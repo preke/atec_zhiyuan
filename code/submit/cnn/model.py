@@ -58,7 +58,7 @@ class CNN_Sim(nn.Module):
         self.dropout2 = nn.Dropout(p=0.1)
         self.fc3 = nn.Linear(100, 2)
         self.dropout3 = nn.Dropout(p=0.1)
-        self.fc4 = nn.Linear(2, 1)
+        self.fc4 = nn.Linear(1, 2)
         self.dropout4 = nn.Dropout(p=0.1)
     def forward(self, q1, q2):
         cnn = self.cnn
@@ -76,6 +76,7 @@ class CNN_Sim(nn.Module):
         # ans = ans.squeeze(1)
         # print ans.shape
         ans = F.cosine_similarity(q1, q2)
+        ans = self.fc4(ans)
         # print(type(cos_ans))
         return ans
 
