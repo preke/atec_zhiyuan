@@ -65,7 +65,7 @@ class CNN_Sim(nn.Module):
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
         
-        # ans = torch.cat([q1, q2], 1)
+        ans = torch.cat([q1, q2], 1)
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
         ans = self.fc2(ans)
