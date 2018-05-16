@@ -47,7 +47,10 @@ def train(train_iter, dev_iter, model, args):
             steps += 1
             if steps % args.log_interval == 0:
                 print logit
-                logit = logit.data.cpu().numpy()
+                logit1 = logit.max(1).cpu().numpy()
+                print logit1
+                logit2 = logit.max(1)[1].cpu().numpy()
+                print logit2
                 res_list.extend(logit)
                 threshold = 0.5    
                 res_list = [1 if i > threshold else 0 for i in res_list]
