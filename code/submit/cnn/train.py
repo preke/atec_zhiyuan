@@ -49,7 +49,7 @@ def train(train_iter, dev_iter, model, args):
                 print logit
                 logit1 = logit.max(1).cpu().numpy()
                 print logit1
-                logit2 = logit.max(1)[1].cpu().numpy()
+                logit2 = logit.max(1)[1]
                 print logit2
                 res_list.extend(logit)
                 threshold = 0.5    
