@@ -30,11 +30,14 @@ def train(train_iter, dev_iter, model, args):
             if args.cuda:
                 question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
             optimizer.zero_grad()
-            logit = model(question1, question2)
+            
+            # logit = model(question1, question2)
+            # target = target.type(torch.cuda.LongTensor)
             target = target.type(torch.cuda.FloatTensor)
-            # criterion = nn.MSELoss()
-            # loss = criterion(logit, target)
-            loss = F.cross_entropy(logit, target)
+            criterion = nn.MSELoss()
+            loss = criterion(logit, target)
+            
+            # loss = F.cross_entropy(logit, target)
             
             loss.backward()
             optimizer.step()

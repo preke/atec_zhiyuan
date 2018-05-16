@@ -65,17 +65,18 @@ class CNN_Sim(nn.Module):
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
         
-        ans = torch.cat([q1, q2], 1)
-        ans = self.fc1(ans)
-        ans = self.dropout1(ans)
-        ans = self.fc2(ans)
-        ans = self.dropout2(ans)
-        ans = self.fc3(ans)
+        # ans = torch.cat([q1, q2], 1)
+        # ans = self.fc1(ans)
+        # ans = self.dropout1(ans)
+        # ans = self.fc2(ans)
+        # ans = self.dropout2(ans)
+        # ans = self.fc3(ans)
+
         # ans = self.dropout3(ans)
         # ans = self.fc4(ans)
         # ans = ans.squeeze(1)
         # print ans.shape
-        # ans = F.cosine_similarity(q1, q2)
+        ans = F.cosine_similarity(q1, q2)
         # ans = self.fc4(ans)
         # print(type(cos_ans))
         return ans
