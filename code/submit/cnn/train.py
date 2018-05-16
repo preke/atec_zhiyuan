@@ -32,7 +32,8 @@ def train(train_iter, dev_iter, model, args):
             optimizer.zero_grad()
             logit = model(question1, question2)
             target = target.type(torch.cuda.FloatTensor)
-            criterion = nn.MSELoss()
+            # criterion = nn.MSELoss()
+            criterion = F.cross_entropy()
             loss = criterion(logit, target)
             loss.backward()
             optimizer.step()
@@ -43,7 +44,7 @@ def train(train_iter, dev_iter, model, args):
             if steps % args.log_interval == 0:
                 logit = logit.data.cpu().numpy()
                 res_list.extend(logit)
-                threshold = 0.5
+                threshold = 0.5    
                 res_list = [1 if i > threshold else 0 for i in res_list]
                 label_list.extend(target.data.cpu().numpy())
                 acc = accuracy_score(res_list, label_list)
