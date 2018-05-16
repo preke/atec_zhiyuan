@@ -46,11 +46,11 @@ def train(train_iter, dev_iter, model, args):
             
             steps += 1
             if steps % args.log_interval == 0:
-                print logit
-                logit1 = logit.max(1)
-                print logit1
-                logit2 = logit.max(1)[1]
-                print logit2
+                # print logit
+                # logit1 = logit.max(1)
+                # print logit1
+                logit = logit.max(1)[1].cpu().numpy()
+                # print logit
                 res_list.extend(logit)
                 threshold = 0.5    
                 res_list = [1 if i > threshold else 0 for i in res_list]
@@ -82,7 +82,7 @@ def eval(data_iter, model, args):
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
         target = target.type(torch.cuda.FloatTensor)
-        logit = logit.data.cpu().numpy()
+        logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     threshold = 0.5
