@@ -125,7 +125,7 @@ if __name__ == '__main__':
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()
 
-    cnn.load_state_dict(torch.load('snapshot/best_steps_49600_0.529069767442', map_location=lambda storage, loc:storage))
+    cnn.load_state_dict(torch.load('snapshot/best_steps_49600_0.529069767442.pt', map_location=lambda storage, loc:storage))
     # if args.cuda:
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()
