@@ -81,13 +81,12 @@ def eval(data_iter, model, args):
         if args.cuda:
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
+        print logit
         target = target.type(torch.cuda.FloatTensor)
         logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     threshold = 0.5
-    for i in res_list:
-        print i
     res_list = [1 if i > threshold else 0 for i in res_list] 
     # print sum(res_list), sum(label_list)
     f1 = f1_score(res_list, label_list)        
