@@ -47,7 +47,7 @@ def gen_iter(path, text_field, label_field, args):
                             format='tsv',
                             skip_header=False,
                             fields=[
-                                    ('id'),
+                                    ('id', label_field),
                                     ('question1', text_field),
                                     ('question2', text_field),
                                     ('label', label_field)
@@ -92,7 +92,7 @@ def load_data(args):
     
     text_field    = data.Field(sequential=True, use_vocab=True, 
                     batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
-    label_field   = data.Field(sequential=False, use_vocab=False)
+    label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
     train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
     dev_data, dev_iter     = gen_iter('data/valid_3000.tsv', text_field, label_field, args)
