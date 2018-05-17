@@ -86,8 +86,10 @@ def eval(data_iter, model, args):
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     threshold = 0.5
+    for i in res_list:
+        print i
     res_list = [1 if i > threshold else 0 for i in res_list] 
-    print sum(res_list), sum(label_list)
+    # print sum(res_list), sum(label_list)
     f1 = f1_score(res_list, label_list)        
     print('\nEvaluation -  f1: {:.4f} \n'.format(f1))
     return f1
