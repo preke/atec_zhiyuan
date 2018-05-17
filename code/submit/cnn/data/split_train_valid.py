@@ -31,9 +31,10 @@ valid_df.to_csv("valid_{}.tsv".format(valid_sample_num), sep="\t", index=False, 
 
 train_df = data_df[~data_df.isin(valid_df)]
 train_df.dropna(inplace=True)
-train_df['id'] = train_df['id'].apply(lambda x: int(re.sub('\xef\xbb\xbf', '', x) ))
+train_df['id'] = train_df['id'].apply(lambda x: int(re.sub('\xef\xbb\xbf', '', str(x)) ))
 
 train_df['label'] = train_df['label'].astype(int)
+print train_df.head()
 train_df.to_csv("train_{}.tsv".format(valid_sample_num), sep="\t", index=False, encoding="utf-8", header=False)
 
 
