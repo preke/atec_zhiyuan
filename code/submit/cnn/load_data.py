@@ -47,7 +47,7 @@ def gen_iter(path, text_field, label_field, args):
                             format='tsv',
                             skip_header=False,
                             fields=[
-                                    ('id', label_field)
+                                    ('id', label_field),
                                     ('question1', text_field),
                                     ('question2', text_field),
                                     ('label', label_field)
