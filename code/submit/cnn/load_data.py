@@ -22,10 +22,8 @@ def train_word2vec_model(df):
     corpus = []
     for i, r in df.iterrows():
         try:
-            for word in jieba.cut(r['ques1']):
-                corpus.append(word)
-            for word in jieba.cut(r['ques2']):
-                corpus.append(word)
+            corpus.append(jieba.lcut(r['ques1']))
+            corpus.append(jieba.lcut(r['ques2']))
         except:
             print 'Exception: ', r['ques1']
     word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0)
@@ -103,7 +101,7 @@ def load_data(args):
     # *****************
     
     text_field    = data.Field(sequential=True, use_vocab=True, 
-                    batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.cut)
+                    batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
     train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
