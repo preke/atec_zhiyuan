@@ -81,7 +81,7 @@ def eval(data_iter, model, args):
         if args.cuda:
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
-        print logit
+        # print logit
         target = target.type(torch.cuda.FloatTensor)
         logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
