@@ -83,7 +83,7 @@ if __name__ == '__main__':
             vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
         except:
             try:
-                vector = np.array(embedding_dict_chinese[str(word.encode('utf-8'))], dtype=float).reshape(1, args.embed_dim)
+                vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
             except:
                 oov += 1
                 vector = np.random.rand(1, args.embed_dim)
