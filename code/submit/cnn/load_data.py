@@ -97,7 +97,7 @@ def gen_iter_test(path, text_field, label_field, args):
 def load_data(args):
     # train woed2vec model
     # *****************
-    df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'])
+    df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     word2vec_model = train_word2vec_model(df_train)
     word2vec_model.save(w2v_model_path)
     # *****************
