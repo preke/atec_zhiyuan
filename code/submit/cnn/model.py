@@ -19,17 +19,8 @@ class CNN_Text(nn.Module):
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
-            # pass
             self.embed.weight.data.copy_(args.pretrained_weight)
-        # self.convs1 = nn.Conv2d(in_channels=Ci, out_channels=Co, kernel_size=(K, D))
         self.convs1 = nn.ModuleList([nn.Conv2d(Ci, Co, (K, D)) for K in Ks])
-        # self.dropout = nn.Dropout(args.dropout)
-        self.fc1 = nn.Linear(300, 300)
-        self.dropout1 = nn.Dropout(p=0.1)
-        self.fc2 = nn.Linear(300, 300)
-        self.dropout2 = nn.Dropout(p=0.1)
-        self.fc3 = nn.Linear(300, 300)
-        self.dropout3 = nn.Dropout(p=0.1)
 
     
     def forward(self, q1):
@@ -52,13 +43,13 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args)
-        self.fc1 = nn.Linear(2, 100)
-        self.dropout1 = nn.Dropout(p=0.1)
-        self.fc2 = nn.Linear(100, 100)
-        self.dropout2 = nn.Dropout(p=0.1)
-        self.fc3 = nn.Linear(100, 2)
-        self.dropout3 = nn.Dropout(p=0.1)
-        self.dist = nn.PairwiseDistance(2)
+        # self.fc1 = nn.Linear(2, 100)
+        # self.dropout1 = nn.Dropout(p=0.1)
+        # self.fc2 = nn.Linear(100, 100)
+        # self.dropout2 = nn.Dropout(p=0.1)
+        # self.fc3 = nn.Linear(100, 2)
+        # self.dropout3 = nn.Dropout(p=0.1)
+        # self.dist = nn.PairwiseDistance(2)
         # self.fc4 = nn.Linear(1, 2)
         # self.dropout4 = nn.Dropout(p=0.1)
     def forward(self, q1, q2):
