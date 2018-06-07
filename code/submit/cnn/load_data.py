@@ -23,6 +23,7 @@ def train_word2vec_model(df):
     for i, r in df.iterrows():
         try:
             corpus.append(jieba.lcut(r['ques1']))
+            print jieba.lcut(r['ques1'])
             corpus.append(jieba.lcut(r['ques2']))
         except:
             print 'Exception: ', r['ques1']
