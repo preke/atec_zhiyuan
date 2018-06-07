@@ -21,10 +21,13 @@ def train_word2vec_model(df):
     '''
     corpus = []
     for i, r in df.iterrows():
-        for word in jieba.cut(r['ques1']):
-            corpus.append(word)
-        for word in jieba.cut(r['ques2']):
-            corpus.append(word)
+        try:
+            for word in jieba.cut(r['ques1']):
+                corpus.append(word)
+            for word in jieba.cut(r['ques2']):
+                corpus.append(word)
+        except:
+            print 'Exception: ', r['ques1']
     word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0)
     return word2vec_model
 
