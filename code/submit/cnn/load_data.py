@@ -13,6 +13,7 @@ from gensim.models import Word2Vec
 import jieba
 
 jieba.load_userdict('data/special_word.txt')
+w2v_model_path = 'data/w2v_train.save'
 
 def train_word2vec_model(df):
     '''
@@ -89,15 +90,20 @@ def gen_iter_test(path, text_field, label_field, args):
 
 
 def load_data(args):
-
+    # train woed2vec model
+    # *****************
+    df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'])
+    word2vec_model = train_word2vec_model(df_train)
+    word2vec_model.save(w2v_model_path)
+    # *****************
     
     text_field    = data.Field(sequential=True, use_vocab=True, 
                     batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
-    train_data, train_iter = gen_iter('data/train_new.tsv', text_field, label_field, args)
-    dev_data, dev_iter     = gen_iter('data/valid_new.tsv', text_field, label_field, args)
-    test_data, test_iter   = gen_iter_test('data/test_new.tsv', text_field, label_field, args)
+    train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
+    dev_data, dev_iter     = gen_iter('data/valid_3000.tsv', text_field, label_field, args)
+    test_data, test_iter   = gen_iter_test('data/test_3000.tsv', text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
