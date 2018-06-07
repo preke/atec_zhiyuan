@@ -27,7 +27,7 @@ def train_word2vec_model(df):
             corpus.append(jieba.lcut(r['ques2']))
         except:
             print 'Exception: ', r['ques1']
-    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0)
+    word2vec_model = Word2Vec(corpus, size=300, window=3, min_count=1, sg=0, iter=100)
     return word2vec_model
 
 
