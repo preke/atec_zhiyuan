@@ -103,7 +103,7 @@ def load_data(args):
     # *****************
     
     text_field    = data.Field(sequential=True, use_vocab=True, 
-                    batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
+                    batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.cut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
     train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
