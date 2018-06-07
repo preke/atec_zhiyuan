@@ -10,7 +10,7 @@ if sys.version_info < (3, 4):
 
 
 
-data_df = pd.read_csv("atec_nlp_sim_train.csv", sep="\t", names=["id","text1","text2","label"])
+data_df = pd.read_csv("atec_nlp_sim_train.tsv", sep="\t", names=["id","text1","text2","label"])
 
 
 # pos_rate = data_df[data_df["label"]==1].shape[0]*1.0 / data_df.shape[0]

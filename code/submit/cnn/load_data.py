@@ -47,16 +47,17 @@ def gen_iter(path, text_field, label_field, args):
                             format='tsv',
                             skip_header=False,
                             fields=[
-                                    ('id', label_field),
+                                    ('id', None),
                                     ('question1', text_field),
                                     ('question2', text_field),
                                     ('label', label_field)
                                     ])
 
-    tmp_iter = data.Iterator(
+    tmp_iter = data.BucketIterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
                     device=0, # 0 for GPU, -1 for CPU
+                    sort_key=lambda x: len(x.question1) + len(x.question2)
                     shuffle=False,
                     repeat=False)
     return tmp_data, tmp_iter
@@ -94,9 +95,9 @@ def load_data(args):
                     batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
-    train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
-    dev_data, dev_iter     = gen_iter('data/valid_3000.tsv', text_field, label_field, args)
-    test_data, test_iter   = gen_iter_test('data/test_3000.tsv', text_field, label_field, args)
+    train_data, train_iter = gen_iter('data/train_new.tsv', text_field, label_field, args)
+    dev_data, dev_iter     = gen_iter('data/valid_new.tsv', text_field, label_field, args)
+    test_data, test_iter   = gen_iter_test('data/test_new.tsv', text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
