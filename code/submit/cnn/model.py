@@ -49,7 +49,7 @@ class CNN_Sim(nn.Module):
         self.dropout2 = nn.Dropout(p=0.1)
         self.fc3 = nn.Linear(100, 2)
         # self.dropout3 = nn.Dropout(p=0.1)
-        # self.dist = nn.PairwiseDistance(2)
+        self.dist = nn.PairwiseDistance(2)
         # self.fc4 = nn.Linear(1, 2)
         # self.dropout4 = nn.Dropout(p=0.1)
     def forward(self, q1, q2):
