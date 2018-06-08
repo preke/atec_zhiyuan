@@ -51,13 +51,10 @@ class CNN_Sim(nn.Module):
         self.dist = nn.PairwiseDistance(2)
 
     def jaccard(self, list1, list2):
-        reslist = []
-        for idx in range(list1.size()[0]):
-            set1 = set(list1[idx].data.cpu().numpy())
-            set2 = set(list2[idx].data.cpu().numpy())
-            jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))
-            reslist.append(jaccard)
-        return torch.FloatTensor(reslist).view(-1, 1)
+        set1 = set(list1.data.cpu().numpy())
+        set2 = set(list2.data.cpu().numpy())
+        jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))   
+        return torch.FloatTensor(jacarrd)
 
     def forward(self, q1, q2):
         cnn = self.cnn
