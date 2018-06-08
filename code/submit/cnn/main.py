@@ -46,7 +46,9 @@ class paras(object):
         self.cuda              = False
 
 if __name__ == '__main__':
-    in_path = sys.argv[1]
+    os.system("sed '1s/^\xEF\xBB\xBF//' {} > new.txt".format(sys.argv[1]))
+    in_path = 'new.txt' # sys.argv[1]
+    # in_path = sys.argv[1]
     out_path  = sys.argv[2]
 
     # parser = argparse.ArgumentParser(description='')
