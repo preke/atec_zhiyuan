@@ -57,7 +57,9 @@ class CNN_Sim(nn.Module):
         return torch.FloatTensor(jacarrd)
 
     def forward(self, q1, q2):
-        cnn = self.cnn
+        jacarrd_value = self.jaccard(q1, q2)
+
+        cnn = self.cnn        
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
         # ans = F.cosine_similarity(q1, q2)
@@ -68,7 +70,7 @@ class CNN_Sim(nn.Module):
         # print q2.shape
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
-        jacarrd_value = self.jaccard(q1, q2)
+        
 
         ans = torch.cat((dot_value, dist_value, jacarrd_value), dim=1)        
         ans = self.fc1(ans)
