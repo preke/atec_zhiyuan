@@ -107,7 +107,7 @@ def load_data(args):
     
     train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
     dev_data, dev_iter     = gen_iter('data/valid_3000.tsv', text_field, label_field, args)
-    test_data, test_iter   = gen_iter_test('data/test_3000.tsv', text_field, label_field, args)
+    test_data, test_iter   = gen_iter_test(args.test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data)
 
     return text_field, label_field, \
