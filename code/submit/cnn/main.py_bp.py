@@ -40,7 +40,7 @@ if __name__ == '__main__':
     parser.add_argument('-kernel-sizes', type=str, default='3', help='comma-separated kernel size to use for convolution')
     parser.add_argument('-static', action='store_true', default=True, help='fix the embedding')
     # device
-    parser.add_argument('-device', type=int, default=0, help='device to use for iterate data, -1 mean cpu [default: -1]')
+    parser.add_argument('-device', type=int, default=1, help='device to use for iterate data, -1 mean cpu [default: -1]')
     parser.add_argument('-no-cuda', action='store_true', default=False, help='disable the gpu')
     # option
     parser.add_argument('-snapshot', type=str, default=None, help='filename of model snapshot [default: None]')
