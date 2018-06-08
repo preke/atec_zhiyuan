@@ -43,15 +43,22 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args)
-        self.fc1 = nn.Linear(2, 100)
+        self.fc1 = nn.Linear(3, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
         self.fc3 = nn.Linear(100, 2)
-        # self.dropout3 = nn.Dropout(p=0.1)
         self.dist = nn.PairwiseDistance(2)
-        # self.fc4 = nn.Linear(1, 2)
-        # self.dropout4 = nn.Dropout(p=0.1)
+
+    def jaccard(self, list1, list2):
+        reslist = []
+        for idx in range(list1.size()[0]):
+            set1 = set(list1[idx].data.cpu().numpy())
+            set2 = set(list2[idx].data.cpu().numpy())
+            jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))
+            reslist.append(jaccard)
+        return torch.FloatTensor(reslist).view(-1, 1)
+
     def forward(self, q1, q2):
         cnn = self.cnn
         q1 = cnn.forward(q1)
@@ -62,11 +69,11 @@ class CNN_Sim(nn.Module):
         # q1 = torch.sum(q1, dim=1).view(q1.size()[0], 1)
         # q2 = torch.sum(q2, dim=1).view(q1.size()[0], 1)
         # print q2.shape
-        dot_value = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
-        dist_value = self.dist(q1, q2).view(q1.size()[0], 1)
+        dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
+        dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
+        jacarrd_value = jaccard(q1, q2)
 
-        ans = torch.cat((dot_value, dist_value), dim=1)
-        
+        ans = torch.cat((dot_value, dist_value, jacarrd_value), dim=1)        
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
         ans = self.fc2(ans)
