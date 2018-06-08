@@ -48,12 +48,12 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = 'data/train.csv'
-    args.dev_path       = 'data/dev.csv'
-    args.test_path      = 'data/test.csv'
+    args.train_path     = 'data/train_3000.tsv'
+    args.dev_path       = 'data/valid_3000.tsv'
+    args.test_path      = 'data/test_3000.tsv'
     args.to_test_path   = 'data/to_test.csv'
     args.w2v_model_path = 'data/w2v_train.save'
-    args.data_path      = 'data/atec_nlp_sim_train.csv'
+    args.data_path      = 'data/atec_nlp_sim_train.tsv'
     args.res_path       = 'data/res.csv'
 
     glove_path = 'data/wordvec.txt'
