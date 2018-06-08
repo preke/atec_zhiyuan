@@ -35,13 +35,13 @@ def train(train_iter, dev_iter, model, args):
             
             
             # ****** cosine_similarity *********
-            target = target.type(torch.cuda.FloatTensor)
-            criterion = nn.MSELoss()
-            loss = criterion(logit, target)
+            # target = target.type(torch.cuda.FloatTensor)
+            # criterion = nn.MSELoss()
+            # loss = criterion(logit, target)
             
             # ******* dot_product ************
-            # target = target.type(torch.cuda.LongTensor)
-            # loss = F.cross_entropy(logit, target)
+            target = target.type(torch.cuda.LongTensor)
+            loss = F.cross_entropy(logit, target)
             
             loss.backward()
             optimizer.step()
@@ -52,7 +52,7 @@ def train(train_iter, dev_iter, model, args):
             if steps % args.log_interval == 0:
                 
                 # ******* dot_product ************
-                # logit = logit.max(1)[1].cpu().numpy()
+                logit = logit.max(1)[1].cpu().numpy()
                 
                 res_list.extend(logit)
                 threshold = 0.5    
@@ -84,10 +84,11 @@ def eval(data_iter, model, args):
         if args.cuda:
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
-        target = target.type(torch.cuda.FloatTensor)
+        # ******* cosine_sim ************
+        # target = target.type(torch.cuda.FloatTensor)
         
         # ******* dot_product ************
-        # logit = logit.max(1)[1].cpu().numpy()
+        logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     threshold = 0.5
