@@ -34,12 +34,12 @@ class paras(object):
         self.device            = -1
         self.no_cuda           = True
         self.snapshot          = None
-        self.train_path        = 'data/train.csv'
-        self.dev_path          = 'data/dev.csv'
+        self.train_path        = 'data/train_3000.tsv'
+        self.dev_path          = 'data/valid_3000.tsv'
         self.test_path         = None
-        self.to_test_path      = 'data/to_test.csv'
+        self.to_test_path      = 'data/test_3000.tsv'
         self.w2v_model_path    = 'data/w2v_train.save'
-        self.data_path         = 'data/atec_nlp_sim_train.csv'
+        self.data_path         = 'data/atec_nlp_sim_train.tsv'
         self.res_path          = None
         self.word_Embedding    = True
         self.pretrained_weight = None
@@ -79,12 +79,12 @@ if __name__ == '__main__':
     # args = parser.parse_args()
 
     args = paras()
-    args.train_path     = 'data/train.csv'
-    args.dev_path       = 'data/dev.csv'
+    args.train_path     = 'data/train_3000.tsv'
+    args.dev_path       = 'data/valid_3000.tsv'
     args.test_path      = in_path
-    args.to_test_path   = 'data/to_test.csv'
+    args.to_test_path   = 'data/test_3000.tsv'
     args.w2v_model_path = 'data/w2v_train.save'
-    args.data_path      = 'data/atec_nlp_sim_train.csv'
+    args.data_path      = 'data/atec_nlp_sim_train.tsv'
     args.res_path       = out_path
     # load data
     # text_field, label_field, train_data, train_iter,\
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     # text_field.build_vocab(train_data, dev_data)
 
 
-    args.embed_num = 7563
+    args.embed_num = 13197
     args.embed_dim = 300
     args.word_Embedding = True
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()
 
-    cnn.load_state_dict(torch.load('snapshot/best_steps_90600_79.9186578546.pt', map_location=lambda storage, loc:storage))
+    cnn.load_state_dict(torch.load('best_steps_9600_0.534739454094.pt', map_location=lambda storage, loc:storage))
     # if args.cuda:
     #         torch.cuda.set_device(args.device)
     #         cnn = cnn.cuda()
