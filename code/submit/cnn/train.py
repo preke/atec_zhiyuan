@@ -106,10 +106,10 @@ def test(test_iter, model, args):
         # if args.cuda:
         #     qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
+        print results
         results = results.max(1)[1].cpu().numpy()
-        
+        print results
         for i in range(len(qid.data)):
-            print results[i].data
             if results[i].data >= threshold:
                 res.append([qid[i].data.cpu().numpy(), '1'])
             #elif results.data[i] < threshold:
