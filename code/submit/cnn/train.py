@@ -107,6 +107,7 @@ def test(test_iter, model, args):
         #     qid, question1, question2 = qid.cuda(), question1.cuda(), question2.cuda()
         results = model(question1, question2)
         for i in range(len(qid.data)):
+            print results[i].data
             if results[i].data >= threshold:
                 res.append([qid[i].data.cpu().numpy(), '1'])
             #elif results.data[i] < threshold:
