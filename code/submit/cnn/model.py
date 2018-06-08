@@ -42,7 +42,8 @@ class CNN_Text(nn.Module):
 class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
-        self.cnn = CNN_Text(args)
+        self.cnn1 = CNN_Text(args)
+        self.cnn2 = CNN_Text(args)
         # self.fc1 = nn.Linear(2, 100)
         # self.dropout1 = nn.Dropout(p=0.1)
         # self.fc2 = nn.Linear(100, 100)
@@ -58,10 +59,9 @@ class CNN_Sim(nn.Module):
         # q2 = cnn.forward(q2)
         # ans = F.cosine_similarity(q1, q2)
 
-        cnn1 = self.cnn
-        cnn2 = self.cnn
-        q1 = cnn1.forward(q1)
-        q2 = cnn2.forward(q2)
+        
+        q1 = self.cnn1.forward(q1)
+        q2 = self.cnn2.forward(q2)
         ans = F.cosine_similarity(q1, q2)
         
         # print q1.shape
