@@ -61,7 +61,7 @@ class CNN_Sim(nn.Module):
         cnn = self.cnn        
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
-        cosine_value = F.cosine_similarity(q1, q2)
+        cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)
         
         # print q1.shape
         # q1 = torch.sum(q1, dim=1).view(q1.size()[0], 1)
@@ -69,10 +69,10 @@ class CNN_Sim(nn.Module):
         # print q2.shape
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
-        print dot_value.shape
-        print dist_value.shape
-        print cosine_value.shape
-        print jacarrd_value.shape
+        # print dot_value.shape
+        # print dist_value.shape
+        # print cosine_value.shape
+        # print jacarrd_value.shape
 
         ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
         ans = self.fc1(ans)
