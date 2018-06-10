@@ -53,7 +53,7 @@ class CNN_Sim(nn.Module):
             jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))
             reslist.append(jaccard)
         # need to change device
-        return torch.cuda.FloatTensor(reslist).view(-1, 1)
+        return torch.FloatTensor(reslist).view(-1, 1)
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
