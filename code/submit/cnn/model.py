@@ -38,7 +38,7 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args)
-        self.fc1 = nn.Linear(3, 100)
+        self.fc1 = nn.Linear(4, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -53,7 +53,7 @@ class CNN_Sim(nn.Module):
             jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))
             reslist.append(jaccard)
         # need to change device
-        return torch.FloatTensor(reslist).view(-1, 1)
+        return torch.cuda.FloatTensor(reslist).view(-1, 1)
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
@@ -61,7 +61,7 @@ class CNN_Sim(nn.Module):
         cnn = self.cnn        
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
-        # ans = F.cosine_similarity(q1, q2)
+        cosine_value = F.cosine_similarity(q1, q2)
         
         # print q1.shape
         # q1 = torch.sum(q1, dim=1).view(q1.size()[0], 1)
@@ -71,7 +71,7 @@ class CNN_Sim(nn.Module):
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
         
 
-        ans = torch.cat((dot_value, dist_value, jacarrd_value), dim=1)        
+        ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
         ans = self.fc2(ans)
