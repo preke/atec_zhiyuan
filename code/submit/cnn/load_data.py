@@ -105,8 +105,8 @@ def load_data(args):
                     batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
-    train_data, train_iter = gen_iter('data/train_fold_1.tsv', text_field, label_field, args)
-    dev_data, dev_iter     = gen_iter('data/valid_fold_1.tsv', text_field, label_field, args)
+    train_data, train_iter = gen_iter('data/train_3000.tsv', text_field, label_field, args)
+    dev_data, dev_iter     = gen_iter('data/valid_3000.tsv', text_field, label_field, args)
     test_data, test_iter   = gen_iter_test(args.test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data)
 
