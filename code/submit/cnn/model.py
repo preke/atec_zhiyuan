@@ -76,8 +76,10 @@ class CNN_Sim(nn.Module):
 
         ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
         ans = self.fc1(ans)
+        ans = F.relu(ans)
         ans = self.dropout1(ans)
         ans = self.fc2(ans)
+        ans = F.relu(ans)
         ans = self.dropout2(ans)
         ans = self.fc3(ans)
 
