@@ -90,7 +90,7 @@ class CNN_Sim(nn.Module):
         ans = self.dropout3(ans)
         ans = F.relu(ans)
 
-        self.fc4 = nn.Linear(100, 2)
+        ans = self.fc4(ans)
         return ans
 
 
