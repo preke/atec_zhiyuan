@@ -42,7 +42,9 @@ class CNN_Sim(nn.Module):
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
-        self.fc3 = nn.Linear(100, 2)
+        self.fc3 = nn.Linear(100, 100)
+        self.dropout3 = nn.Dropout(p=0.1)
+        self.fc4 = nn.Linear(100, 2)
         self.dist = nn.PairwiseDistance(2)
 
     def jaccard(self, list1, list2):
@@ -75,14 +77,20 @@ class CNN_Sim(nn.Module):
         # print jacarrd_value.shape
 
         ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
+        
         ans = self.fc1(ans)
-        ans = F.relu(ans)
         ans = self.dropout1(ans)
-        ans = self.fc2(ans)
         ans = F.relu(ans)
+        
+        ans = self.fc2(ans)
         ans = self.dropout2(ans)
+        ans = F.relu(ans)
+        
         ans = self.fc3(ans)
+        ans = self.dropout3(ans)
+        ans = F.relu(ans)
 
+        self.fc4 = nn.Linear(100, 2)
         return ans
 
 
