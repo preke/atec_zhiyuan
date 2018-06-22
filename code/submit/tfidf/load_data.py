@@ -145,8 +145,12 @@ def load_data(args):
     word2vec_model = train_word2vec_model(df)
     df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
+
     df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
+
+    df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
+    get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='test')
     
     # word2vec_model.save(w2v_model_path)
 
@@ -155,8 +159,8 @@ def load_data(args):
     text_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
-    train_data, train_iter = gen_iter('data/train_tfidf_weighted_embeddings_pairs.tsv', text_field, label_field, args)
-    dev_data, dev_iter     = gen_iter('data/valid_tfidf_weighted_embeddings_pairs.tsv', text_field, label_field, args)
+    train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
+    dev_data, dev_iter     = gen_iter(args.dev_path, text_field, label_field, args)
     test_data, test_iter   = gen_iter_test(args.test_path, text_field, label_field, args)
     text_field.build_vocab(train_data, dev_data)
 

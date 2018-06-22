@@ -48,10 +48,9 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = 'data/train_3000.tsv'
-    args.dev_path       = 'data/valid_3000.tsv'
-    args.test_path      = 'data/test_3000.tsv'
-    args.to_test_path   = 'data/to_test.csv'
+    args.train_path     = 'data/train_tfidf_weighted_embeddings_pairs.tsv'
+    args.dev_path       = 'data/valid_tfidf_weighted_embeddings_pairs.tsv'
+    args.test_path      = 'data/test_tfidf_weighted_embeddings_pairs.tsv'
     args.w2v_model_path = 'data/w2v_train.save'
     args.data_path      = 'data/atec_nlp_sim_train.tsv'
     args.res_path       = 'data/res.csv'
@@ -69,33 +68,33 @@ if __name__ == '__main__':
 
     # text_field.build_vocab(train_data, dev_data)
 
+    # ****************
+    # args.embed_num = len(text_field.vocab)
+    # args.embed_dim = 300
+    # args.word_Embedding = True
 
-    args.embed_num = len(text_field.vocab)
-    args.embed_dim = 300
-    args.word_Embedding = True
+    # embedding_dict = load_glove_as_dict(glove_path)
+    # embedding_dict_chinese = Word2Vec.load(w2v_model_path)
+    # word_vec_list = []
+    # oov = 0
+    # for idx, word in enumerate(text_field.vocab.itos):
+    #     try:
+    #         vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+    #     except:
+    #         try:
+    #             vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
+    #         except:
+    #             oov += 1
+    #             vector = np.random.rand(1, args.embed_dim)
+    # word_vec_list.append(torch.from_numpy(vector))
+    # wordvec_matrix = torch.cat(word_vec_list)
+    # print('oov: %s' %str(oov))
+    # print(args.embed_num)
+    # args.pretrained_weight = wordvec_matrix
+    # args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
+    # ****************
 
-    embedding_dict = load_glove_as_dict(glove_path)
-    embedding_dict_chinese = Word2Vec.load(w2v_model_path)
-    word_vec_list = []
-    oov = 0
-    for idx, word in enumerate(text_field.vocab.itos):
-        try:
-            vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
-        except:
-            try:
-                vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
-            except:
-                oov += 1
-                vector = np.random.rand(1, args.embed_dim)
-    word_vec_list.append(torch.from_numpy(vector))
-    wordvec_matrix = torch.cat(word_vec_list)
-    print('oov: %s' %str(oov))
-    print(args.embed_num)
-    args.pretrained_weight = wordvec_matrix
-    args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
-
-
-    cnn = model.CNN_Sim(args)
+    tfidf_interaction = model.Interaction(args)
     args.cuda = (not args.no_cuda) and torch.cuda.is_available(); del args.no_cuda
     if args.cuda:
             torch.cuda.set_device(args.device)
