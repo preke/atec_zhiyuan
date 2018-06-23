@@ -98,21 +98,21 @@ if __name__ == '__main__':
     args.cuda = (not args.no_cuda) and torch.cuda.is_available(); del args.no_cuda
     if args.cuda:
             torch.cuda.set_device(args.device)
-            cnn = cnn.cuda()
+            tfidf_interaction = tfidf_interaction.cuda()
 
     if args.snapshot is not None:
         print('\nLoading model from {}...'.format(args.snapshot))
-        cnn.load_state_dict(torch.load(args.snapshot))
+        tfidf_interaction.load_state_dict(torch.load(args.snapshot))
         if args.cuda:
             torch.cuda.set_device(args.device)
-            cnn = cnn.cuda()
+            tfidf_interaction = tfidf_interaction.cuda()
             
     else:
         try:
-            train(train_iter=train_iter, dev_iter=dev_iter, model=cnn, args=args)
+            train(train_iter=train_iter, dev_iter=dev_iter, model=tfidf_interaction, args=args)
         except KeyboardInterrupt:
             print(traceback.print_exc())
             print('\n' + '-' * 89)
             print('Exiting from training early')
 
-    test(test_iter=test_iter, model=cnn, args=args)
+    test(test_iter=test_iter, model=tfidf_interaction, args=args)
