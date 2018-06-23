@@ -73,7 +73,7 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
             cnt += 1
             tfidf_weighted_embeddings_pairs.append(temp_list)
     tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs)
-    
+    print tfidf_weighted_embeddings_pairs.shape
     tfidf_weighted_embeddings_pairs.to_csv('data/'+ mode + '_tfidf_weighted_embeddings_pairs.tsv', header=None, sep='\t', index=False)
 
 def load_glove_as_dict(filepath):
@@ -85,6 +85,10 @@ def load_glove_as_dict(filepath):
             vec = line[1:]
             word_vec[word] = vec
     return word_vec
+
+# def str_preprocess(_string):
+#     tmp = _string.strip()
+
 
 def gen_iter(path, text_field, label_field, args):
     '''
@@ -149,8 +153,8 @@ def load_data(args):
     # df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     # get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
 
-    # df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
-    # get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='test')
+    df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
+    get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='test')
     
     # word2vec_model.save(w2v_model_path)
 
