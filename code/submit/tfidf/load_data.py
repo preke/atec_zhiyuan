@@ -145,8 +145,8 @@ def gen_iter_test(path, text_field, label_field, args):
 def load_data(args):
     # train woed2vec model
     # *****************
-    # df = pd.read_csv('data/atec_nlp_sim_train.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    # word2vec_model = train_word2vec_model(df)
+    df = pd.read_csv('data/atec_nlp_sim_train.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    word2vec_model = train_word2vec_model(df)
     # df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     # get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
 
