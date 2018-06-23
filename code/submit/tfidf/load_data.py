@@ -72,7 +72,7 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
                 temp_list.append(labels[cnt])
             cnt += 1
             tfidf_weighted_embeddings_pairs.append(temp_list)
-    tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, names=['id', 'ebd1', 'ebd2'])
+    tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, columns=['id', 'ebd1', 'ebd2'])
     print tfidf_weighted_embeddings_pairs.shape
     tfidf_weighted_embeddings_pairs['ebd1'] = tfidf_weighted_embeddings_pairs['ebd1'].astype(list)
     tfidf_weighted_embeddings_pairs['ebd2'] = tfidf_weighted_embeddings_pairs['ebd2'].astype(list)
