@@ -76,7 +76,7 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
     print tfidf_weighted_embeddings_pairs.shape
     tfidf_weighted_embeddings_pairs['ebd1'] = tfidf_weighted_embeddings_pairs['ebd1'].astype(list)
     tfidf_weighted_embeddings_pairs['ebd2'] = tfidf_weighted_embeddings_pairs['ebd2'].astype(list)
-    print tfidf_weighted_embeddings_pairs.head(1)
+    # print tfidf_weighted_embeddings_pairs.head(1)
     tfidf_weighted_embeddings_pairs.to_csv('data/'+ mode + '_tfidf_weighted_embeddings_pairs.tsv', header=None, sep='\t', index=False)
 
 def load_glove_as_dict(filepath):
@@ -150,11 +150,11 @@ def load_data(args):
     # *****************
     df = pd.read_csv('data/atec_nlp_sim_train.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
     word2vec_model = train_word2vec_model(df)
-    # df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    # get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
+    df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
 
-    # df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    # get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
+    df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
 
     df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
     get_tfidf_weighted_embedding(df_test, word2vec_model, mode='test')
