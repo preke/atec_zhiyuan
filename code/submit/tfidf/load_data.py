@@ -76,7 +76,7 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
     print tfidf_weighted_embeddings_pairs.shape
     tfidf_weighted_embeddings_pairs['ebd1'] = tfidf_weighted_embeddings_pairs['ebd1'].astype(list)
     tfidf_weighted_embeddings_pairs['ebd2'] = tfidf_weighted_embeddings_pairs['ebd2'].astype(list)
-    print tfidf_weighted_embeddings_pairs.head
+    print tfidf_weighted_embeddings_pairs.head(1)
     tfidf_weighted_embeddings_pairs.to_csv('data/'+ mode + '_tfidf_weighted_embeddings_pairs.tsv', header=None, sep='\t', index=False)
 
 def load_glove_as_dict(filepath):
@@ -109,7 +109,7 @@ def gen_iter(path, text_field, label_field, args):
                                     ('question2', text_field),
                                     ('label', label_field)
                                     ])
-    print tmp_data
+    # sprint tmp_data
     tmp_iter = data.BucketIterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
