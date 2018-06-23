@@ -154,7 +154,7 @@ def load_data(args):
     # get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
 
     df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
-    get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='test')
+    get_tfidf_weighted_embedding(df_test, word2vec_model, mode='test')
     
     # word2vec_model.save(w2v_model_path)
 
