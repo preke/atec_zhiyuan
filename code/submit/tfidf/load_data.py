@@ -72,11 +72,13 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
                 temp_list.append(labels[cnt])
             cnt += 1
             tfidf_weighted_embeddings_pairs.append(temp_list)
+    
     if mode != 'test':
         tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, columns=['id', 'ebd1', 'ebd2', 'label'])
     else:
         tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, columns=['id', 'ebd1', 'ebd2'])
     print tfidf_weighted_embeddings_pairs.shape
+    print type(tfidf_weighted_embeddings_pairs['ebd1'][0])
     tfidf_weighted_embeddings_pairs['ebd1'] = tfidf_weighted_embeddings_pairs['ebd1'].astype(list)
     tfidf_weighted_embeddings_pairs['ebd2'] = tfidf_weighted_embeddings_pairs['ebd2'].astype(list)
     # print tfidf_weighted_embeddings_pairs.head(1)
@@ -92,7 +94,7 @@ def load_glove_as_dict(filepath):
             word_vec[word] = vec
     return word_vec
 
-# def str_preprocess(_string):
+def str_preprocess(_string):
 #     tmp = _string.strip()
 
 
