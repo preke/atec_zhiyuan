@@ -21,7 +21,9 @@ class Interaction(nn.Module):
     
         print q1.shape
         print q2.shape
-        cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)
+        q1 = q1.unsqueeze(1)
+        q2 = q2.unsqueeze(1)  
+        # cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)
         
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
@@ -41,7 +43,7 @@ class Interaction(nn.Module):
         ans = F.relu(ans)
 
         ans = self.fc4(ans)
-        
+
         return ans
 
 
