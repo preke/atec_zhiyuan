@@ -18,7 +18,8 @@ class Interaction(nn.Module):
         self.dist = nn.PairwiseDistance(2)
 
     def forward(self, q1, q2):
-    
+        q1 = q1.float()
+        q2 = q2.float()
         print q1.shape
         print q2.shape
         # q1 = q1.unsqueeze(1)
