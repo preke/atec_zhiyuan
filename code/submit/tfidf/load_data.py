@@ -154,16 +154,16 @@ def gen_iter_test(path, text_field, label_field, args):
 def load_data(args):
     # train woed2vec model
     # *****************
-    df = pd.read_csv('data/atec_nlp_sim_train.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    word2vec_model = train_word2vec_model(df)
-    df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
+    # df = pd.read_csv('data/atec_nlp_sim_train.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    # word2vec_model = train_word2vec_model(df)
+    # df_train = pd.read_csv('data/train_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    # get_tfidf_weighted_embedding(df_train, word2vec_model, mode='train')
 
-    df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
-    get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
+    # df_dev = pd.read_csv('data/valid_3000.tsv', names=['id', 'ques1', 'ques2', 'label'], sep='\t')
+    # get_tfidf_weighted_embedding(df_dev, word2vec_model, mode='valid')
 
-    df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
-    get_tfidf_weighted_embedding(df_test, word2vec_model, mode='test')
+    # df_test = pd.read_csv('data/test_3000.tsv', names=['id', 'ques1', 'ques2'], sep='\t')
+    # get_tfidf_weighted_embedding(df_test, word2vec_model, mode='test')
     
     # word2vec_model.save(w2v_model_path)
 
