@@ -2,6 +2,8 @@
 import os
 import pandas as pd
 import numpy as np
+import torch
+import torch.autograd as autograd
 import re
 import random
 from env.torchtext import data
@@ -95,6 +97,8 @@ def preprocess(_string):
     _string = re.sub('\n', ' ', _string)
     _string = _string[1:-1]
     _string = [float(i) for i in _string.split()]
+    _string = torch.cuda.FloatTensor(_string)
+    _string = autograd.Variable(_string)
     return _string
 
 
