@@ -77,10 +77,7 @@ def get_tfidf_weighted_embedding(df, word2vec_model, mode):
         tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, columns=['id', 'ebd1', 'ebd2', 'label'])
     else:
         tfidf_weighted_embeddings_pairs = pd.DataFrame(tfidf_weighted_embeddings_pairs, columns=['id', 'ebd1', 'ebd2'])
-    print tfidf_weighted_embeddings_pairs.shape
-    print type(tfidf_weighted_embeddings_pairs['ebd1'][0])
-    tfidf_weighted_embeddings_pairs['ebd1'] = tfidf_weighted_embeddings_pairs['ebd1'].astype(list)
-    tfidf_weighted_embeddings_pairs['ebd2'] = tfidf_weighted_embeddings_pairs['ebd2'].astype(list)
+
     # print tfidf_weighted_embeddings_pairs.head(1)
     tfidf_weighted_embeddings_pairs.to_csv('data/'+ mode + '_tfidf_weighted_embeddings_pairs.tsv', header=None, sep='\t', index=False)
 
@@ -94,8 +91,12 @@ def load_glove_as_dict(filepath):
             word_vec[word] = vec
     return word_vec
 
-def str_preprocess(_string):
-#     tmp = _string.strip()
+def preprocess(_string):
+    _string = re.sub('\n', ' ', _string)
+    _string = _string[1:-1]
+    _string = [float(i) for i in _string.split()]
+    return _string
+
 
 
 def gen_iter(path, text_field, label_field, args):
@@ -169,6 +170,7 @@ def load_data(args):
     # *****************
     
     text_field   = data.RawField()
+    text_field.preprocessing = data.Pipeline(preprocess)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
     train_data, train_iter = gen_iter(args.train_path, text_field, label_field, args)
