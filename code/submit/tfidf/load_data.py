@@ -123,7 +123,7 @@ def gen_iter(path, text_field, label_field, args):
     tmp_iter = data.BucketIterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
-                    device=1, # 0 for GPU, -1 for CPU
+                    device=0, # 0 for GPU, -1 for CPU
                     # sort_key=lambda x: len(x.question1) + len(x.question2),
                     shuffle=False,
                     repeat=False)
@@ -173,7 +173,7 @@ def load_data(args):
 
     # *****************
     
-    text_field   = data.RawField()
+    text_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     text_field.preprocessing = data.Pipeline(preprocess)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
