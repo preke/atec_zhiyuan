@@ -27,6 +27,10 @@ class Interaction(nn.Module):
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
 
+        print cosine_value.shape
+        print dot_value.shape
+        print dist_value.shape
+
         ans = torch.cat((dot_value, dist_value, cosine_value), dim=1)        
         
         ans = self.fc1(ans)
