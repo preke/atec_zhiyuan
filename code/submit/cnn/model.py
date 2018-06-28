@@ -16,7 +16,7 @@ class CNN_Text(nn.Module):
         Ci = 1
         Co = args.kernel_num
         Ks = args.kernel_sizes
-        K  = 1
+        K  = 3
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
@@ -28,8 +28,8 @@ class CNN_Text(nn.Module):
     def forward(self, q1):
         q1 = self.embed(q1) # batch_size * n * d
         print q1.shape
-        q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
-        print q1.shape
+        # q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
+        # print q1.shape
         q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
         print q1.shape
         q1 = q1.squeeze(3)
