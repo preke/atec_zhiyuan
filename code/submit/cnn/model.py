@@ -25,31 +25,16 @@ class CNN_Text(nn.Module):
 
     
     def forward(self, q1):
-        q1 = self.embed(q1) # 32 * n * d
-        print q1.shape
-        q1 = q1.unsqueeze(1)  # 32 * 1 * n * d
-        print q1.shape
-        q1 = F.tanh(self.conv1(q1))  # 32 * d * n
-        print q1.shape
+        q1 = self.embed(q1) # batch_size * n * d
+        # print q1.shape
+        q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
+        # print q1.shape
+        q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
+        # print q1.shape
         q1 = q1.squeeze(3)
-        print q1.shape
-        q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2)
-        # q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
-        print q1.shape
-        print type(q1)
-        # q1 = [F.tanh(conv(q1)).squeeze(3) for conv in self.convs1]  # [(N, Co, W), ...]*len(Ks)
-        # q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
-        
-
-        # q1 = [F.tanh(i) for i in q1]
-        
-
-
-
-        # q1 = torch.cat(q1, 1) # 64 * 300
-        
+        # print q1.shape
+        q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel                
         return q1
-
 
 class CNN_Sim(nn.Module):
     def __init__(self, args):
@@ -82,17 +67,9 @@ class CNN_Sim(nn.Module):
         q2 = cnn.forward(q2)
         cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)
         
-        # print q1.shape
-        # q1 = torch.sum(q1, dim=1).view(q1.size()[0], 1)
-        # q2 = torch.sum(q2, dim=1).view(q1.size()[0], 1)
-        # print q2.shape
-        dot_value     = torch.bmm(q1.view(q1.size()[0], 1, 300), q2.view(q1.size()[0], 300, 1)).view(q1.size()[0], 1)
+        
+        dot_value     = torch.bmm(q1.view(q1.size()[0], 1, q1.size()[1]), q2.view(q1.size()[0], q1.size()[1], 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
-        # print dot_value.shape
-        # print dist_value.shape
-        # print cosine_value.shape
-        # print jacarrd_value.shape
-
         ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
         
         ans = self.fc1(ans)
