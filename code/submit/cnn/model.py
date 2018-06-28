@@ -26,16 +26,19 @@ class CNN_Text(nn.Module):
     
     def forward(self, q1):
         q1 = self.embed(q1) # batch_size * n * d
-        # print q1.shape
+        print q1.shape
         q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
-        # print q1.shape
+        print q1.shape
         q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
-        # print q1.shape
+        print q1.shape
         q1 = q1.squeeze(3)
-        # print q1.shape
+        print q1.shape
         # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        return q1
+        q1 = F.max_pool1d(q1, q1.size(2)) # .squeeze(2) # batch_size * out_channel
+        print q1.shape
+        q1 = q1.squeeze(2)
+        print q1.shape
+        # return q1
 
 class CNN_Sim(nn.Module):
     def __init__(self, args):
