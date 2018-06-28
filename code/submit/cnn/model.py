@@ -22,7 +22,7 @@ class CNN_Text(nn.Module):
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
         self.conv1 = nn.Conv2d(Ci, Co, (K, D), padding=(K-1,0))
-
+        self.conv2 = nn.Conv2d(Ci, Co, (K, 1), padding=(K-1,0))
 
     
     def forward(self, q1):
@@ -32,7 +32,8 @@ class CNN_Text(nn.Module):
         print q1.shape
         q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
         print q1.shape
-        q1 = q1.squeeze(3)
+        q1 = F.avg_pool1d(q1, K)
+        # q1 = q1.squeeze(3)
         print q1.shape
         # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
         q1 = F.max_pool1d(q1, q1.size(2)) # .squeeze(2) # batch_size * out_channel
