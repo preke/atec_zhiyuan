@@ -21,15 +21,15 @@ class CNN_Text(nn.Module):
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
-        self.conv1 = nn.Conv2d(Ci, Co, (K, D), padding=3)
+        self.conv1 = nn.Conv2d(Ci, Co, (K, D), padding=(0,K-1))
 
 
     
     def forward(self, q1):
         q1 = self.embed(q1) # batch_size * n * d
         print q1.shape
-        # q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
-        # print q1.shape
+        q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
+        print q1.shape
         q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
         print q1.shape
         q1 = q1.squeeze(3)
