@@ -40,7 +40,7 @@ def train(train_iter, dev_iter, model, args):
             # loss = criterion(logit, target)
             
             # ******* dot_product ************
-            target = target.type(torch.cuda.LongTensor)
+            target = target.type(torch.LongTensor)
             loss = F.cross_entropy(logit, target)
             
             loss.backward()
