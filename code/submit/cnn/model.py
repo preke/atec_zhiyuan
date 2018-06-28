@@ -33,7 +33,8 @@ class CNN_Text(nn.Module):
         # print q1.shape
         q1 = q1.squeeze(3)
         # print q1.shape
-        q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel                
+        q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
+        # q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
         return q1
 
 class CNN_Sim(nn.Module):
@@ -61,13 +62,10 @@ class CNN_Sim(nn.Module):
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
-
         cnn = self.cnn        
         q1 = cnn.forward(q1)
         q2 = cnn.forward(q2)
-        cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)
-        
-        
+        cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)        
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, q1.size()[1]), q2.view(q1.size()[0], q1.size()[1], 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
         ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
