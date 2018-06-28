@@ -16,19 +16,32 @@ class CNN_Text(nn.Module):
         Ci = 1
         Co = args.kernel_num
         Ks = args.kernel_sizes
+        K  = 3
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
-        self.convs1 = nn.ModuleList([nn.Conv2d(Ci, Co, (K, D)) for K in Ks])
+        self.conv1 = nn.Conv2d(Ci, Co, (K, D))
 
     
     def forward(self, q1):
-        q1 = self.embed(q1)
-        q1 = q1.unsqueeze(1)  # (N, Ci, W, D)
-        q1 = [F.tanh(conv(q1)).squeeze(3) for conv in self.convs1]  # [(N, Co, W), ...]*len(Ks)
-        q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
-        q1 = [F.tanh(i) for i in q1]
+        q1 = self.embed(q1) # n * d
+        
+        q1 = q1.unsqueeze(1)  # n * 1 * d
+        
+        q1 = F.tanh(self.conv1(q1)).squeeze(3)  #
+        print q1.shape
+        # q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
+        
+        # q1 = [F.tanh(conv(q1)).squeeze(3) for conv in self.convs1]  # [(N, Co, W), ...]*len(Ks)
+        # q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
+        
+
+        # q1 = [F.tanh(i) for i in q1]
+        
+
+
+
         q1 = torch.cat(q1, 1) # 64 * 300
         
         return q1
