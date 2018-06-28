@@ -33,7 +33,7 @@ class CNN_Text(nn.Module):
         print q1.shape
         q1 = q1.squeeze(3)
         print q1.shape
-        q1 = F.avg_pool1d(q1, i,size(1))
+        q1 = F.avg_pool1d(q1, q1.size(2))
         # q1 = [i.size(2) * F.avg_pool1d(i, i.size(2)).squeeze(2) for i in q1]  # [(N, Co), ...]*len(Ks)
         print q1.shape
         # q1 = [F.tanh(conv(q1)).squeeze(3) for conv in self.convs1]  # [(N, Co, W), ...]*len(Ks)
