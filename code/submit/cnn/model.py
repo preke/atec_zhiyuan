@@ -36,7 +36,7 @@ class CNN_Text(nn.Module):
         # print q1.shape
         q1 = q1.squeeze(3)
         # print q1.shape
-        q1 = F.avg_pool1d(q1, self.K, stride=1)
+        q1 = F.max_pool1d(q1, self.K, stride=1)
         # print q1.shape
         q1 = q1.unsqueeze(3)
         # print q1.shape
