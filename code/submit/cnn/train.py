@@ -41,7 +41,8 @@ def train(train_iter, dev_iter, model, args):
             
             # ******* dot_product ************
             target = target.type(torch.cuda.LongTensor)
-            loss = F.cross_entropy(logit, target)
+            weights = torch.cuda.FloatTensor([0.8, 0.2])
+            loss = F.cross_entropy(logit, target, weight=weights)
             
             loss.backward()
             optimizer.step()
