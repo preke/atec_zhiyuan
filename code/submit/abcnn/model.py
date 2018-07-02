@@ -187,7 +187,7 @@ class Abcnn2(nn.Module):
 
         self.abcnn = nn.ModuleList()
         self.conv = nn.ModuleList()
-        self.ap = nn.ModuleList([ApLayer(float(sentence_length), float(emb_dim))])
+        self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
         self.fc = nn.Linear(layer_size+1, 1)
 
         for i in range(layer_size):
@@ -420,7 +420,8 @@ class ApLayer(nn.Module):
 
     def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
-        self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
+        # self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
+        self.ap = F.avg_pool2d((pool_width, 1), stride=1)
         self.height = height
 
     def forward(self, x):
