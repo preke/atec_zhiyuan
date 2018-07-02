@@ -187,7 +187,7 @@ class Abcnn2(nn.Module):
 
         self.abcnn = nn.ModuleList()
         self.conv = nn.ModuleList()
-        self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
+        self.ap = nn.ModuleList([ApLayer(float(sentence_length), float(emb_dim))])
         self.fc = nn.Linear(layer_size+1, 1)
 
         for i in range(layer_size):
