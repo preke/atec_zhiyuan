@@ -70,8 +70,8 @@ class Abcnn3(nn.Module):
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
-        print x1.shape
-        print x2.shape
+        print x1.shape, type(x1)
+        print x2.shape, type(x2)
         sim = []
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
 
@@ -424,7 +424,6 @@ class ApLayer(nn.Module):
 
     def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
-        print 'pool_width:', pool_width
         self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
         self.height = height
 
