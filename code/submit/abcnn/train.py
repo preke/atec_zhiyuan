@@ -40,7 +40,8 @@ def train(train_iter, dev_iter, model, args):
             # loss = criterion(logit, target)
             
             # ******* dot_product ************
-            target = target.type(torch.LongTensor.to(device='cuda:1'))
+            target = target.type(torch.LongTensor)
+            target = target.to(device='cuda:1')
             # weights = torch.cuda.FloatTensor([0.2, 0.8])
             loss = F.cross_entropy(logit, target)
             
