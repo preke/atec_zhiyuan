@@ -35,7 +35,7 @@ class Abcnn3(nn.Module):
         self.abcnn2 = nn.ModuleList()
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
-        self.fc = nn.Linear(layer_size+1, 1)
+        self.fc = nn.Linear(layer_size+1, 2)
         self.embed = nn.Embedding(emb_num, emb_dim)
         self.embed.weight.data.copy_(pretrained_weight)
         for i in range(layer_size):
