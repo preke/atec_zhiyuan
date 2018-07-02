@@ -35,7 +35,10 @@ class Abcnn3(nn.Module):
         self.abcnn2 = nn.ModuleList()
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
-        self.fc = nn.Linear(layer_size+1, 2)
+        self.fc1 = nn.Linear(layer_size+1, 100)
+        self.fc2 = nn.Linear(100, 100)
+        self.fc3 = nn.Linear(100, 2)
+        self.dropout = nn.Dropout(p=0.1)
         self.embed = nn.Embedding(emb_num, emb_dim)
         self.embed.weight.data.copy_(pretrained_weight)
         for i in range(layer_size):
@@ -83,7 +86,15 @@ class Abcnn3(nn.Module):
             x1, x2 = self.abcnn2[i](x1, x2)
             
         sim_fc = torch.cat(sim, dim=1)
-        output = self.fc(sim_fc)
+        output = self.fc1(sim_fc)
+        output = self.dropout(output)
+        output = F.tanh(output)
+
+        output = self.fc2(output)
+        output = self.dropout(output)
+        output = F.tanh(output)
+
+        output = self.fc3(output)
         return output
 
 class Abcnn1(nn.Module):
