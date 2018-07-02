@@ -22,7 +22,7 @@ class Abcnn3(nn.Module):
     ap : list of pooling layer
     fc : last linear layer(in paper use logistic regression)
     '''
-    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
         super(Abcnn3, self).__init__()
         self.layer_size = layer_size
             
