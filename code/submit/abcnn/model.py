@@ -424,6 +424,7 @@ class ApLayer(nn.Module):
 
     def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
+        print 'pool_width:', pool_width
         self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
         self.height = height
 

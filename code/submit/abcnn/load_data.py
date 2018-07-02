@@ -101,7 +101,7 @@ def load_data(args):
     # word2vec_model.save(w2v_model_path)
     # *****************
     
-    text_field    = data.Field(sequential=True, use_vocab=True, 
+    text_field    = data.Field(sequential=True, use_vocab=True, fix_length=25,
                     batch_first=True, eos_token='<EOS>', init_token='<BOS>', pad_token='<PAD>', tokenize=jieba.lcut)
     label_field   = data.Field(sequential=False, use_vocab=False, batch_first=True)
     
