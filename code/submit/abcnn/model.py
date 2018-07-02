@@ -413,8 +413,8 @@ def attention_matrix(x1, x2, eps=1e-6):
     output : 3-D torch Tensor
         match score result of size (batch_size, sentence_length(for x2), sentence_length(for x1))
     '''
-    eps = torch.cuda.tensor(eps)
-    one = torch.cuda.tensor(1.)
+    eps = torch.tensor(eps).cuda()
+    one = torch.tensor(1.).cuda()
     euclidean = (torch.pow(x1 - x2.permute(0, 2, 1, 3), 2).sum(dim=3) + eps).sqrt()
     return (euclidean + one).reciprocal()
 
