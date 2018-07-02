@@ -70,8 +70,8 @@ class Abcnn3(nn.Module):
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
-        print x1.shape, type(x1)
-        print x2.shape, type(x2)
+        # print x1.shape, type(x1)
+        # print x2.shape, type(x2)
         sim = []
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
 
