@@ -102,6 +102,7 @@ if __name__ == '__main__':
         sentence_length = 25,
         filter_width = args.kernel_size,
         filter_channel = args.kernel_num,
+        pretrained_weight = args.pretrained_weight
         )
     args.cuda = True
     if args.cuda:
