@@ -88,13 +88,13 @@ class Abcnn3(nn.Module):
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc1(sim_fc)
         output = F.relu(output)
-        output = F.batch_norm(output, bias=False)
+        output = nn.BatchNorm1d(output)
         output = self.dropout(output)
         
 
         output = self.fc2(output)
         output = F.relu(output)
-        output = F.batch_norm(output, bias=False)
+        output = nn.BatchNorm1d(output)
         output = self.dropout(output)
         
 
