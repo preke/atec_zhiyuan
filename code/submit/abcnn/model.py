@@ -420,7 +420,7 @@ class ApLayer(nn.Module):
 
     def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
-        self.ap = F.avg_pool2d((pool_width, 1), stride=1)
+        self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
         self.height = height
 
     def forward(self, x):

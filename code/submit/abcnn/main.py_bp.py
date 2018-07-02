@@ -102,17 +102,17 @@ if __name__ == '__main__':
         filter_width = args.kernel_size,
         filter_channel = args.kernel_num,
         )
-    args.cuda = (not args.no_cuda) and torch.cuda.is_available(); del args.no_cuda
+    args.cuda = True
     if args.cuda:
             torch.cuda.set_device(args.device)
-            abcnn = abcnn.cuda()
+            abcnn = abcnn.to('cuda')
 
     if args.snapshot is not None:
         print('\nLoading model from {}...'.format(args.snapshot))
         abcnn.load_state_dict(torch.load(args.snapshot))
         if args.cuda:
             torch.cuda.set_device(args.device)
-            abcnn = abcnn.cuda()
+            abcnn = abcnn.to
             
     else:
         try:
