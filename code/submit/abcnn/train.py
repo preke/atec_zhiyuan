@@ -32,7 +32,7 @@ def train(train_iter, dev_iter, model, args):
             optimizer.zero_grad()
             
             logit = model(question1, question2)
-            print logit
+            # print logit
             
             # ****** cosine_similarity *********
             # target = target.type(torch.cuda.FloatTensor)
