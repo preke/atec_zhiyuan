@@ -399,8 +399,6 @@ def convolution(in_channel, filter_width, filter_height, filter_channel, padding
 def attention_matrix(x1, x2, eps=1e-6):
     '''compute attention matrix using match score
     
-    1 / (1 + [x · y])
-    [·] is euclidean distance
     Parameters
     ----------
     x1, x2 : 4-D torch Tensor
