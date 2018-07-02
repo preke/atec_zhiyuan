@@ -70,6 +70,8 @@ class Abcnn3(nn.Module):
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
+        x1 = x1.cuda()
+        x2 = x2.cuda()
         print x1.shape, type(x1)
         print x2.shape, type(x2)
         sim = []
