@@ -66,6 +66,10 @@ class Abcnn3(nn.Module):
         output : 2-D torch Tensor
             size (batch_size, 1)
         '''
+        x1 = self.embed(x1)
+        x2 = self.embed(x2)
+        x1 = x1.unsqueeze(1)
+        x2 = x2.unsqueeze(1)
         print x1.shape
         print x2.shape
         sim = []
