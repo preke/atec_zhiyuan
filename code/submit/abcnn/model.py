@@ -22,7 +22,7 @@ class Abcnn3(nn.Module):
     ap : list of pooling layer
     fc : last linear layer(in paper use logistic regression)
     '''
-    def __init__(self, emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True):
         super(Abcnn3, self).__init__()
         self.layer_size = layer_size
             
@@ -36,7 +36,7 @@ class Abcnn3(nn.Module):
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
         self.fc = nn.Linear(layer_size+1, 1)
-
+        self.embed = nn.Embedding(emb_num, emb_dim)
 
         for i in range(layer_size):
             self.abcnn1.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
@@ -420,8 +420,7 @@ class ApLayer(nn.Module):
 
     def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
-        # self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
-        self.ap = F.avg_pool2d((pool_width, 1), stride=1)
+        self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
         self.height = height
 
     def forward(self, x):
