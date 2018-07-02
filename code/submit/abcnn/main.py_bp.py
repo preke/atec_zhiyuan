@@ -40,8 +40,8 @@ if __name__ == '__main__':
     parser.add_argument('-kernel-size', type=str, default=3, help='comma-separated kernel size to use for convolution')
     parser.add_argument('-static', action='store_true', default=True, help='fix the embedding')
     # device
-    parser.add_argument('-device', type=int, default=1, help='device to use for iterate data, -1 mean cpu [default: -1]')
-    parser.add_argument('-no-cuda', action='store_true', default=False, help='disable the gpu')
+    # parser.add_argument('-device', type=int, default=1, help='device to use for iterate data, -1 mean cpu [default: -1]')
+    # parser.add_argument('-no-cuda', action='store_true', default=False, help='disable the gpu')
     # option
     parser.add_argument('-snapshot', type=str, default=None, help='filename of model snapshot [default: None]')
     parser.add_argument('-predict', type=str, default=None, help='predict the sentence given')
@@ -105,8 +105,8 @@ if __name__ == '__main__':
         )
     args.cuda = True
     if args.cuda:
-            torch.cuda.set_device(args.device)
-            abcnn = abcnn.to('cuda')
+            # torch.cuda.set_device(args.device)
+            abcnn = abcnn.to('cuda:1')
 
     if args.snapshot is not None:
         print('\nLoading model from {}...'.format(args.snapshot))

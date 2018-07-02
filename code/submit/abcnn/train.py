@@ -10,7 +10,7 @@ import traceback
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
 def train(train_iter, dev_iter, model, args):
-    device = torch.device("cuda")
+    device = torch.device("cuda:1")
     model = model.to(device) 
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
     optimizer = torch.optim.Adam(parameters, lr=args.lr)
@@ -28,7 +28,7 @@ def train(train_iter, dev_iter, model, args):
             label_list = []
             question1, question2, target = batch.question1, batch.question2, batch.label
             if args.cuda:
-                question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
+                question1, question2, target = question1.to(device='cuda:1'), question2.to(device='cuda:1'), target.to(device='cuda:1')
             optimizer.zero_grad()
             
             logit = model(question1, question2)
@@ -40,7 +40,7 @@ def train(train_iter, dev_iter, model, args):
             # loss = criterion(logit, target)
             
             # ******* dot_product ************
-            target = target.type(torch.cuda.LongTensor)
+            target = target.type(torch.LongTensor.to(device='cuda:1'))
             # weights = torch.cuda.FloatTensor([0.2, 0.8])
             loss = F.cross_entropy(logit, target)
             
