@@ -32,7 +32,7 @@ def train(train_iter, dev_iter, model, args):
             optimizer.zero_grad()
             
             logit = model(question1, question2)
-            
+            print logit
             
             # ****** cosine_similarity *********
             # target = target.type(torch.cuda.FloatTensor)
@@ -41,8 +41,8 @@ def train(train_iter, dev_iter, model, args):
             
             # ******* dot_product ************
             target = target.type(torch.cuda.LongTensor)
-            weights = torch.cuda.FloatTensor([0.2, 0.8])
-            loss = F.cross_entropy(logit, target, weight=weights)
+            # weights = torch.cuda.FloatTensor([0.2, 0.8])
+            loss = F.cross_entropy(logit, target)
             
             loss.backward()
             optimizer.step()
