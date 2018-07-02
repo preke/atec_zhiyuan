@@ -70,8 +70,6 @@ class Abcnn3(nn.Module):
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
-        x1 = x1.cuda()
-        x2 = x2.cuda()
         print x1.shape, type(x1)
         print x2.shape, type(x2)
         sim = []
@@ -415,8 +413,8 @@ def attention_matrix(x1, x2, eps=1e-6):
     output : 3-D torch Tensor
         match score result of size (batch_size, sentence_length(for x2), sentence_length(for x1))
     '''
-    eps = torch.tensor(eps)
-    one = torch.tensor(1.)
+    eps = torch.cuda.tensor(eps)
+    one = torch.cuda.tensor(1.)
     euclidean = (torch.pow(x1 - x2.permute(0, 2, 1, 3), 2).sum(dim=3) + eps).sqrt()
     return (euclidean + one).reciprocal()
 
