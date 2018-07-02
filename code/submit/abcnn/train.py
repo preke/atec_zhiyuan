@@ -28,7 +28,7 @@ def train(train_iter, dev_iter, model, args):
             label_list = []
             question1, question2, target = batch.question1, batch.question2, batch.label
             if args.cuda:
-                question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
+                question1, question2, target = question1.to(device) , question2.to(device) , target.to(device) 
             optimizer.zero_grad()
             
             logit = model(question1, question2)
@@ -40,7 +40,8 @@ def train(train_iter, dev_iter, model, args):
             # loss = criterion(logit, target)
             
             # ******* dot_product ************
-            target = target.type(torch.cuda.LongTensor)
+            target = target.type(torch.LongTensor)
+            target = target.to(device) 
             # weights = torch.cuda.FloatTensor([0.2, 0.8])
             loss = F.cross_entropy(logit, target)
             print loss
