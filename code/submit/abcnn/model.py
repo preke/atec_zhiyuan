@@ -94,6 +94,7 @@ class Abcnn3(nn.Module):
 
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc1(sim_fc)
+        print output
         output = F.relu(output)
         output = self.dropout1(output)
         
