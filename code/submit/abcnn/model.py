@@ -26,10 +26,10 @@ class Abcnn3(nn.Module):
         super(Abcnn3, self).__init__()
         self.layer_size = layer_size
             
-        if match == 'cosine':
-            self.distance = cosine_similarity
-        else:
-            self.distance = manhattan_distance
+        # if match == 'cosine':
+        self.cos_distance = cosine_similarity
+        # else:
+        self.manh_distance = manhattan_distance
 
         self.abcnn1 = nn.ModuleList()
         self.abcnn2 = nn.ModuleList()
@@ -84,7 +84,8 @@ class Abcnn3(nn.Module):
             x1, x2 = self.abcnn1[i](x1, x2)
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
-            sim.append(self.distance(self.ap[i+1](x1), self.ap[i+1](x2)))
+            sim.append(self.cos_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
+            sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             x1, x2 = self.abcnn2[i](x1, x2)
         
         print 'x1__shape', x1.shape
