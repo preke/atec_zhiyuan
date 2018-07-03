@@ -418,7 +418,7 @@ def convolution(in_channel, filter_width, filter_height, filter_channel, padding
     '''
     model = nn.Sequential(
         nn.Conv2d(in_channel, filter_channel, (filter_width, filter_height), stride=1, padding=(padding, 0)),
-        nn.BatchNorm2d(filter_channel),
+        # nn.BatchNorm2d(filter_channel),
         nn.Tanh()
     )
     return model
