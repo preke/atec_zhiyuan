@@ -42,8 +42,9 @@ def train(train_iter, dev_iter, model, args):
             # ******* dot_product ************
             target = target.type(torch.LongTensor)
             target = target.to(device) 
+            criterion = nn.BCEWithLogitsLoss()
             # weights = torch.cuda.FloatTensor([0.2, 0.8])
-            loss = F.cross_entropy(logit, target)
+            loss = criterion(logit, target)
             
             loss.backward()
             optimizer.step()
