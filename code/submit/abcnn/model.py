@@ -35,7 +35,7 @@ class Abcnn3(nn.Module):
         self.abcnn2 = nn.ModuleList()
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
-        self.fc1 = nn.Linear(layer_size+1, 100)
+        self.fc1 = nn.Linear(2*(layer_size+1), 100)
         self.fc2 = nn.Linear(100, 100)
         self.fc3 = nn.Linear(100, 2)
         self.dropout1 = nn.Dropout(p=0.1)
@@ -78,8 +78,8 @@ class Abcnn3(nn.Module):
         # print x1.shape, type(x1)
         # print x2.shape, type(x2)
         sim = []
-        sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
-
+        sim.append(self.cos_distance(self.ap[0](x1), self.ap[0](x2)))
+        sim.append(self.manh_distance(self.ap[0](x1), self.ap[0](x2)))
         for i in range(self.layer_size):
             x1, x2 = self.abcnn1[i](x1, x2)
             x1 = self.conv[i](x1)
@@ -88,9 +88,9 @@ class Abcnn3(nn.Module):
             sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             x1, x2 = self.abcnn2[i](x1, x2)
         
-        print 'x1__shape', x1.shape
-        print 'x2__shape', x2.shape    
-        print len(sim)
+        # print 'x1__shape', x1.shape
+        # print 'x2__shape', x2.shape    
+        # print len(sim)
 
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc1(sim_fc)
