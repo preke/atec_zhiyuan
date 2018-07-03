@@ -39,6 +39,8 @@ def train(train_iter, dev_iter, model, args):
             # criterion = nn.MSELoss()
             # loss = criterion(logit, target)
             
+            print logit
+
             # ******* dot_product ************
             target = target.type(torch.FloatTensor)
             target = target.to(device) 
@@ -55,7 +57,8 @@ def train(train_iter, dev_iter, model, args):
             if steps % args.log_interval == 0:
                 
                 # ******* dot_product ************
-                logit = logit.max(1)[1].cpu().numpy()
+                
+                # logit = logit.max(1)[1].cpu().numpy()
                 
                 res_list.extend(logit)
                 # ******* cosine_similarity ************
