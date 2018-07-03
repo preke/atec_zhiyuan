@@ -170,10 +170,15 @@ class Abcnn1(nn.Module):
             x1, x2 = self.abcnn[i](x1, x2)
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
+
             sim.append(self.distance(self.ap[i+1](x1), self.ap[i+1](x2)))
+            
             x1 = self.wp[i](x1)
             x2 = self.wp[i](x2)
-            
+        
+        print 'x1__shape', x1.shape
+        print 'x2__shape', x2.shape    
+        print sim.shape
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc(sim_fc)
         return output
