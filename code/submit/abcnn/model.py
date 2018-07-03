@@ -89,7 +89,7 @@ class Abcnn3(nn.Module):
         
         print 'x1__shape', x1.shape
         print 'x2__shape', x2.shape    
-        print sim.shape
+        print len(sim)
 
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc1(sim_fc)
