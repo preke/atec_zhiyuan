@@ -106,7 +106,7 @@ class Abcnn3(nn.Module):
 
         output = self.fc3(output)
         output = output.squeeze()
-        print output.shape
+        # print output.shape
         return output
 
 class Abcnn1(nn.Module):
