@@ -1,6 +1,6 @@
 import os
 
 files = os.listdir('./snapshot/')
-print files
 files = sorted(files, key=lambda x:float(x.split('_')[3][:-3]), reverse=True)
-print files[0]
+os.system('cp ' + files[0] + 'cv_models/')
+os.system('rm snapshot/*.pt')
