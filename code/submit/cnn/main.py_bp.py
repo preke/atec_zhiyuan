@@ -16,11 +16,12 @@ from train import train, test
 from gensim.models import Word2Vec
 
 if __name__ == '__main__':
-    train_path = sys.argv[1]
-    vali_path  = sys.argv[2]
 
     parser = argparse.ArgumentParser(description='')
     # learning
+    parser.add_argument('-train-path', type=str)
+    parser.add_argument('-dev-path', type=str)
+
     parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
     parser.add_argument('-epochs', type=int, default=25, help='number of epochs for train [default: 256]')
     parser.add_argument('-batch-size', type=int, default=32, help='batch size for training [default: 64]')
@@ -48,8 +49,8 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = train_path
-    args.dev_path       = vali_path
+    # args.train_path     = train_path
+    # args.dev_path       = vali_path
     # args.test_path      = 'data/test_3000.tsv'
     args.to_test_path   = 'data/to_test.csv'
     args.w2v_model_path = 'data/w2v_train.save'
