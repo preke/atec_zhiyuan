@@ -16,14 +16,13 @@ class CNN_Text(nn.Module):
         Ci = 1
         Co = args.kernel_num
         Ks = args.kernel_sizes
-        K = 3
-        self.K  = 3
+        K  = 3
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
-        self.conv1 = nn.Conv2d(Ci, Co, (K, D), padding=(K-1,0))
-        self.conv2 = nn.Conv2d(Co, Co, (K, 1), padding=(K-1,0))
+        self.embed.weight.requires_grad = True
+        self.conv1 = nn.Conv2d(Ci, Co, (K, D))
 
     
     def forward(self, q1):
@@ -31,29 +30,12 @@ class CNN_Text(nn.Module):
         # print q1.shape
         q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
         # print q1.shape
-        
         q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
         # print q1.shape
         q1 = q1.squeeze(3)
-        '''
-        # # print q1.shape
-        # q1 = F.max_pool1d(q1, self.K, stride=1)
-        # # print q1.shape
-        # q1 = q1.unsqueeze(3)
-        # # print q1.shape
-        
-        # q1 = F.tanh(self.conv2(q1))  # batch_size * out_channel * n-2
-        # # print q1.shape
-        # q1 = q1.squeeze(3)
         # print q1.shape
         # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        '''
-        q1 = F.max_pool1d(q1, q1.size(2)) # .squeeze(2) # batch_size * out_channel
-        # print q1.shape
-        
-        q1 = q1.squeeze(2)
-        # print q1.shape
-        # print '=========='
+        q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
         return q1
 
 class CNN_Sim(nn.Module):
@@ -77,7 +59,7 @@ class CNN_Sim(nn.Module):
             jaccard = len(set1 & set2) * 1.0 / (len(set1) + len(set2) - len(set1 & set2))
             reslist.append(jaccard)
         # need to change device
-        return torch.cuda.FloatTensor(reslist).view(-1, 1)
+        return torch.FloatTensor(reslist).view(-1, 1)
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
