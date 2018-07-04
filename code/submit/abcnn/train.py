@@ -10,7 +10,7 @@ import traceback
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
 def train(train_iter, dev_iter, model, args):
-    device = torch.device("cuda:1")
+    device = torch.device("cuda:0")
     model = model.to(device) 
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
     optimizer = torch.optim.Adam(parameters, lr=args.lr)

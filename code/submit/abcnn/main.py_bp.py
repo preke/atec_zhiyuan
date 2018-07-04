@@ -107,7 +107,7 @@ if __name__ == '__main__':
     args.cuda = True
     if args.cuda:
             # torch.cuda.set_device(args.device)
-            abcnn = abcnn.to('cuda:1')
+            abcnn = abcnn.to('cuda:0')
 
     if args.snapshot is not None:
         print('\nLoading model from {}...'.format(args.snapshot))
