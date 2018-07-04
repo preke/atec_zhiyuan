@@ -32,14 +32,11 @@ def train(train_iter, dev_iter, model, args):
             optimizer.zero_grad()
             
             logit = model(question1, question2)
-            # print logit
-            
             # ****** cosine_similarity *********
             # target = target.type(torch.cuda.FloatTensor)
             # criterion = nn.MSELoss()
             # loss = criterion(logit, target)
             
-            print logit
 
             # ******* dot_product ************
             target = target.type(torch.FloatTensor)
@@ -59,7 +56,7 @@ def train(train_iter, dev_iter, model, args):
                 # ******* dot_product ************
                 
                 # logit = logit.max(1)[1].cpu().numpy()
-                
+                logit = [1 if i > 0.5 else 0 for i in logit]
                 res_list.extend(logit)
                 # ******* cosine_similarity ************
                 # threshold = 0.5    
@@ -91,11 +88,12 @@ def eval(data_iter, model, args):
         if args.cuda:
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
+        logit = [1 if i > 0.5 else 0 for i in logit]
         # ******* cosine_sim ************
         # target = target.type(torch.cuda.FloatTensor)
         
         # ******* dot_product ************
-        logit = logit.max(1)[1].cpu().numpy()
+        # logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     # ******* cosine_sim ************
