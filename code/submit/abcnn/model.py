@@ -35,8 +35,8 @@ class Abcnn3(nn.Module):
         self.abcnn2 = nn.ModuleList()
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
-        self.fc1 = nn.Linear(2*(layer_size+1), 100)
-        # self.fc1 = nn.Linear(2*(layer_size+1), 1)
+        # self.fc1 = nn.Linear(2*(layer_size+1), 100)
+        self.fc1 = nn.Linear(2*(layer_size+1), 1)
         self.fc2 = nn.Linear(100, 100)
         self.fc3 = nn.Linear(100, 1)
         self.dropout1 = nn.Dropout(p=0.1)
@@ -95,16 +95,16 @@ class Abcnn3(nn.Module):
 
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc1(sim_fc)
-        output = F.relu(output)
-        output = self.dropout1(output)
+        # output = F.relu(output)
+        # output = self.dropout1(output)
         
 
-        output = self.fc2(output)
-        output = F.relu(output)
-        output = self.dropout2(output)
+        # output = self.fc2(output)
+        # output = F.relu(output)
+        # output = self.dropout2(output)
         
 
-        output = self.fc3(output)
+        # output = self.fc3(output)
         output = output.squeeze()
         # print output.shape
         return output

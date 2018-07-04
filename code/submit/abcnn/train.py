@@ -33,20 +33,20 @@ def train(train_iter, dev_iter, model, args):
             
             logit = model(question1, question2)
             # ****** cosine_similarity *********
-            # target = target.type(torch.cuda.FloatTensor)
-            # criterion = nn.MSELoss()
-            # loss = criterion(logit, target)
+            target = target.type(torch.cuda.FloatTensor)
+            criterion = nn.MSELoss()
+            loss = criterion(logit, target)
             
 
             # ******* dot_product ************
-            target = target.type(torch.FloatTensor)
-            target = target.to(device) 
-            criterion = nn.BCEWithLogitsLoss()
-            # weights = torch.cuda.FloatTensor([0.2, 0.8])
-            loss = criterion(logit, target)
+            # target = target.type(torch.FloatTensor)
+            # target = target.to(device) 
+            # criterion = nn.BCEWithLogitsLoss()
+            # # weights = torch.cuda.FloatTensor([0.2, 0.8])
+            # loss = criterion(logit, target)
             
-            loss.backward()
-            optimizer.step()
+            # loss.backward()
+            # optimizer.step()
             
             
             
@@ -56,11 +56,11 @@ def train(train_iter, dev_iter, model, args):
                 # ******* dot_product ************
                 
                 # logit = logit.max(1)[1].cpu().numpy()
-                logit = [1 if i > 0.5 else 0 for i in logit]
+                
                 res_list.extend(logit)
                 # ******* cosine_similarity ************
-                # threshold = 0.5    
-                # res_list = [1 if i > threshold else 0 for i in res_list]
+                threshold = 0.5    
+                res_list = [1 if i > threshold else 0 for i in res_list]
                 label_list.extend(target.data.cpu().numpy())
                 acc = accuracy_score(res_list, label_list)
                 f1 = f1_score(res_list, label_list)
@@ -88,17 +88,16 @@ def eval(data_iter, model, args):
         if args.cuda:
             question1, question2, target = question1.cuda(), question2.cuda(), target.cuda()
         logit = model(question1, question2)
-        logit = [1 if i > 0.5 else 0 for i in logit]
         # ******* cosine_sim ************
-        # target = target.type(torch.cuda.FloatTensor)
+        target = target.type(torch.cuda.FloatTensor)
         
         # ******* dot_product ************
         # logit = logit.max(1)[1].cpu().numpy()
         res_list.extend(logit)
         label_list.extend(target.data.cpu().numpy()) 
     # ******* cosine_sim ************
-    # threshold = 0.5
-    # res_list = [1 if i > threshold else 0 for i in res_list] 
+    threshold = 0.5
+    res_list = [1 if i > threshold else 0 for i in res_list] 
     f1 = f1_score(res_list, label_list)        
     print('\nEvaluation -  f1: {:.4f} \n'.format(f1))
     return f1
