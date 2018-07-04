@@ -16,13 +16,13 @@ from train import train, test
 from gensim.models import Word2Vec
 
 if __name__ == '__main__':
-    # train_path = sys.argv[1]
-    # test_path  = sys.argv[2]
+    train_path = sys.argv[1]
+    vali_path  = sys.argv[2]
 
     parser = argparse.ArgumentParser(description='')
     # learning
     parser.add_argument('-lr', type=float, default=0.001, help='initial learning rate [default: 0.001]')
-    parser.add_argument('-epochs', type=int, default=50, help='number of epochs for train [default: 256]')
+    parser.add_argument('-epochs', type=int, default=25, help='number of epochs for train [default: 256]')
     parser.add_argument('-batch-size', type=int, default=32, help='batch size for training [default: 64]')
     parser.add_argument('-log-interval',  type=int, default=1,   help='how many steps to wait before logging training status [default: 1]')
     parser.add_argument('-test-interval', type=int, default=100, help='how many steps to wait before testing [default: 100]')
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
     args = parser.parse_args()
 
-    args.train_path     = 'data/train_3000.tsv'
-    args.dev_path       = 'data/valid_3000.tsv'
-    args.test_path      = 'data/test_3000.tsv'
+    args.train_path     = train_path
+    args.dev_path       = vali_path
+    # args.test_path      = 'data/test_3000.tsv'
     args.to_test_path   = 'data/to_test.csv'
     args.w2v_model_path = 'data/w2v_train.save'
     args.data_path      = 'data/atec_nlp_sim_train.tsv'
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     # load data
     text_field, label_field, train_data, train_iter,\
-        dev_data, dev_iter, test_data, test_iter = load_data(args)
+        dev_data, dev_iter = load_data(args)
 
     # text_field.build_vocab(train_data, dev_data)
 
@@ -116,4 +116,4 @@ if __name__ == '__main__':
             print('\n' + '-' * 89)
             print('Exiting from training early')
 
-    test(test_iter=test_iter, model=cnn, args=args)
+    # test(test_iter=test_iter, model=cnn, args=args)
