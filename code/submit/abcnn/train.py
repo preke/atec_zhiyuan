@@ -59,23 +59,23 @@ def train(train_iter, dev_iter, model, args):
                 
                 res_list.extend(logit)
                 # ******* cosine_similarity ************
-                threshold = 0.2    
+                threshold = 0.5    
                 res_list = [1 if i > threshold else 0 for i in res_list]
                 label_list.extend(target.data.cpu().numpy())
                 acc = accuracy_score(res_list, label_list)
                 f1 = f1_score(res_list, label_list)
                 sys.stdout.write(
                     '\rBatch[{}] - acc: {:.4f}, - f1: {:.4f}'.format(steps, acc, f1))
-            # if steps % args.test_interval == 0:
-            #     dev_f1 = eval(dev_iter, model, args)
-            #     if dev_f1 > best_f1:
-            #         best_f1 = dev_f1
-            #         last_step = steps
-            #         if args.save_best:
-            #             save(model, args.save_dir, 'best', steps, best_f1)
-            #     else:
-            #         if steps - last_step >= args.early_stop:
-            #             print('early stop by {} steps.'.format(args.early_stop))
+            if steps % args.test_interval == 0:
+                dev_f1 = eval(dev_iter, model, args)
+                if dev_f1 > best_f1:
+                    best_f1 = dev_f1
+                    last_step = steps
+                    if args.save_best:
+                        save(model, args.save_dir, 'best', steps, best_f1)
+                else:
+                    if steps - last_step >= args.early_stop:
+                        print('early stop by {} steps.'.format(args.early_stop))
 
 
 
