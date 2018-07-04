@@ -34,19 +34,19 @@ def train(train_iter, dev_iter, model, args):
             logit = model(question1, question2)
             # ****** cosine_similarity *********
             target = target.type(torch.cuda.FloatTensor)
-            criterion = nn.MSELoss()
-            loss = criterion(logit, target)
+            # criterion = nn.MSELoss()
+            # loss = criterion(logit, target)
             
 
             # ******* dot_product ************
             # target = target.type(torch.FloatTensor)
             # target = target.to(device) 
-            # criterion = nn.BCEWithLogitsLoss()
+            criterion = nn.BCEWithLogitsLoss()
             # # weights = torch.cuda.FloatTensor([0.2, 0.8])
-            # loss = criterion(logit, target)
+            loss = criterion(logit, target)
             
-            # loss.backward()
-            # optimizer.step()
+            loss.backward()
+            optimizer.step()
             
             
             
