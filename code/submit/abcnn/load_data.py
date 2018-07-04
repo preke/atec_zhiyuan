@@ -61,7 +61,7 @@ def gen_iter(path, text_field, label_field, args):
     tmp_iter = data.BucketIterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=1, # 0 for GPU, -1 for CPU
                     sort_key=lambda x: len(x.question1) + len(x.question2),
                     shuffle=False,
                     repeat=False)
@@ -87,7 +87,7 @@ def gen_iter_test(path, text_field, label_field, args):
     tmp_iter = data.Iterator(
                     dataset=tmp_data,
                     batch_size=args.batch_size,
-                    device=0, # 0 for GPU, -1 for CPU
+                    device=1, # 0 for GPU, -1 for CPU
                     shuffle=False,
                     repeat=False)
     return tmp_data, tmp_iter
