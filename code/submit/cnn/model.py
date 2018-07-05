@@ -16,13 +16,16 @@ class CNN_Text(nn.Module):
         Ci = 1
         Co = args.kernel_num
         Ks = args.kernel_sizes
-        K  = 3
+        
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
         self.embed.weight.requires_grad = True
-        self.conv1 = nn.Conv2d(Ci, Co, (K, D))
+        self.conv1 = nn.Conv2d(Ci, Co, (1, D))
+        self.conv2 = nn.Conv2d(Ci, Co, (2, D))
+        self.conv3 = nn.Conv2d(Ci, Co, (3, D))
+        
 
     
     def forward(self, q1):
@@ -30,13 +33,17 @@ class CNN_Text(nn.Module):
         # print q1.shape
         q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
         # print q1.shape
-        q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
-        # print q1.shape
-        q1 = q1.squeeze(3)
-        # print q1.shape
-        # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        return q1
+        q1_1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
+        q1_2 = F.tanh(self.conv2(q1))  # batch_size * out_channel * n-2
+        q1_3 = F.tanh(self.conv3(q1))  # batch_size * out_channel * n-2
+        print q1_1.shape
+        print q1_2.shape
+        print q1_3.shape
+        # q1 = q1.squeeze(3)
+        
+        # # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
+        # q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
+        # return q1
 
 class CNN_Sim(nn.Module):
     def __init__(self, args):
