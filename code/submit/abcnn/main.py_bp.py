@@ -56,7 +56,7 @@ if __name__ == '__main__':
     args.data_path      = 'data/atec_nlp_sim_train.tsv'
     args.res_path       = 'data/res.csv'
 
-    glove_path = 'data/wordvec.txt'
+    # glove_path = 'data/wordvec.txt'
     w2v_model_path = 'data/w2v_train.save'
 
     # load data
@@ -74,19 +74,16 @@ if __name__ == '__main__':
     args.embed_dim = 300
     args.word_Embedding = True
 
-    embedding_dict = load_glove_as_dict(glove_path)
+    # embedding_dict = load_glove_as_dict(glove_path)
     embedding_dict_chinese = Word2Vec.load(w2v_model_path)
     word_vec_list = []
     oov = 0
     for idx, word in enumerate(text_field.vocab.itos):
         try:
-            vector = np.array(embedding_dict[word], dtype=float).reshape(1, args.embed_dim)
+            vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
         except:
-            try:
-                vector = np.array(embedding_dict_chinese[word], dtype=float).reshape(1, args.embed_dim)
-            except:
-                oov += 1
-                vector = np.random.rand(1, args.embed_dim)
+            oov += 1
+            vector = np.random.rand(1, args.embed_dim)
     word_vec_list.append(torch.from_numpy(vector))
     wordvec_matrix = torch.cat(word_vec_list)
     print('oov: %s' %str(oov))
