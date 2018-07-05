@@ -72,6 +72,10 @@ class Abcnn3(nn.Module):
         output : 2-D torch Tensor
             size (batch_size, 1)
         '''
+        print x1
+        print '======='
+        print x2
+        print '+++++'
         x1 = self.embed(x1)
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
@@ -86,10 +90,10 @@ class Abcnn3(nn.Module):
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
             cos_sim = self.cos_distance(self.ap[i+1](x1), self.ap[i+1](x2))
-            print '============'
-            print cos_sim
-            print '============'
-            print
+            # print '============'
+            # print cos_sim
+            # print '============'
+            # print
             sim.append(cos_sim)
             # sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             x1, x2 = self.abcnn2[i](x1, x2)
