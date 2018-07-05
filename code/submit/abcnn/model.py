@@ -36,7 +36,7 @@ class Abcnn3(nn.Module):
         self.conv = nn.ModuleList()
         self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
         # self.fc1 = nn.Linear(2*(layer_size+1), 100)
-        self.fc1 = nn.Linear(2*(layer_size+1), 1)
+        self.fc1 = nn.Linear((layer_size+1), 1)
         self.fc2 = nn.Linear(100, 100)
         self.fc3 = nn.Linear(100, 1)
         self.dropout1 = nn.Dropout(p=0.1)
@@ -86,7 +86,7 @@ class Abcnn3(nn.Module):
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
             sim.append(self.cos_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
-            sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
+            # sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             x1, x2 = self.abcnn2[i](x1, x2)
         
         # print 'x1__shape', x1.shape
