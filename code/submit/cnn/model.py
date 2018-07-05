@@ -43,7 +43,7 @@ class CNN_Sim(nn.Module):
         self.cnn1 = CNN_Text(args, window_size=1)
         self.cnn2 = CNN_Text(args, window_size=2)
         self.cnn3 = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(4, 100)
+        self.fc1 = nn.Linear(10, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -67,12 +67,32 @@ class CNN_Sim(nn.Module):
         cnn1 = self.cnn1
         cnn2 = self.cnn2
         cnn3 = self.cnn3        
-        q1 = cnn3.forward(q1)
-        q2 = cnn3.forward(q2)
-        cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)        
-        dot_value     = torch.bmm(q1.view(q1.size()[0], 1, q1.size()[1]), q2.view(q1.size()[0], q1.size()[1], 1)).view(q1.size()[0], 1)
-        dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
-        ans = torch.cat((dot_value, dist_value, jacarrd_value, cosine_value), dim=1)        
+        
+        q1_cnn1 = cnn1.forward(q1)
+        q2_cnn1 = cnn1.forward(q2)
+        cosine_value_1 = F.cosine_similarity(q1_cnn1, q2_cnn1).view(-1, 1)        
+        dot_value_1     = torch.bmm(q1_cnn1.view(q1_cnn1.size()[0], 1, q1_cnn1.size()[1]), q2_cnn1.view(q1_cnn1.size()[0], q1_cnn1.size()[1], 1)).view(q1_cnn1.size()[0], 1)
+        dist_value_1    = self.dist(q1_cnn1, q2_cnn1).view(q1_cnn1.size()[0], 1)
+
+        q1_cnn2 = cnn2.forward(q1)
+        q2_cnn2 = cnn2.forward(q2)
+        cosine_value_2 = F.cosine_similarity(q1_cnn2, q2_cnn2).view(-1, 1)        
+        dot_value_2     = torch.bmm(q1_cnn2.view(q1_cnn2.size()[0], 1, q1_cnn2.size()[1]), q2_cnn2.view(q1_cnn2.size()[0], q1_cnn2.size()[1], 1)).view(q1_cnn2.size()[0], 1)
+        dist_value_2    = self.dist(q1_cnn2, q2_cnn2).view(q1_cnn2.size()[0], 1)
+
+        q1_cnn3 = cnn3.forward(q1)
+        q2_cnn3 = cnn3.forward(q2)
+        cosine_value_3 = F.cosine_similarity(q1_cnn3, q2_cnn3).view(-1, 1)        
+        dot_value_3     = torch.bmm(q1_cnn3.view(q1_cnn3.size()[0], 1, q1_cnn3.size()[1]), q2_cnn3.view(q1_cnn3.size()[0], q1_cnn3.size()[1], 1)).view(q1_cnn3.size()[0], 1)
+        dist_value_3    = self.dist(q1_cnn3, q2_cnn3).view(q1_cnn3.size()[0], 1)
+        
+
+        ans = torch.cat((
+            dot_value_1, dist_value_1, cosine_value_1,
+            dot_value_2, dist_value_2, cosine_value_2,
+            dot_value_3, dist_value_3, cosine_value_3,
+            jacarrd_value
+            ), dim=1)        
         
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
