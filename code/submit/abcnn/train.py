@@ -43,9 +43,9 @@ def train(train_iter, dev_iter, model, args):
             # target = target.to(device) 
             criterion = nn.BCEWithLogitsLoss()
             # # weights = torch.cuda.FloatTensor([0.2, 0.8])
-            print target
+
             loss = criterion(logit, target)
-            
+            print loss
             loss.backward()
             optimizer.step()
             

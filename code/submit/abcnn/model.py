@@ -43,7 +43,7 @@ class Abcnn3(nn.Module):
         self.dropout2 = nn.Dropout(p=0.1)
         self.embed = nn.Embedding(emb_num, emb_dim)
         self.embed.weight.data.copy_(pretrained_weight)
-        self.embed.weight.requires_grad = False
+        # self.embed.weight.requires_grad = False
         for i in range(layer_size):
             self.abcnn1.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
             self.abcnn2.append(Abcnn2Portion(sentence_length, filter_width))
@@ -74,10 +74,10 @@ class Abcnn3(nn.Module):
         '''
         x1 = self.embed(x1)
         x2 = self.embed(x2)
-        print x1
-        print '======='
-        print x2
-        print '+++++'
+        # print x1
+        # print '======='
+        # print x2
+        # print '+++++'
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
         # print x1.shape, type(x1)
