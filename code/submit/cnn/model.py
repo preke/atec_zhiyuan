@@ -6,7 +6,7 @@ from math import sqrt
 import numpy as np
 
 class CNN_Text(nn.Module):
-    def __init__(self, args):
+    def __init__(self, args, window_size):
         super(CNN_Text, self).__init__()
         self.args = args
         
@@ -15,17 +15,13 @@ class CNN_Text(nn.Module):
         
         Ci = 1
         Co = args.kernel_num
-        Ks = args.kernel_sizes
-        
+        K  = window_size
         self.embed = nn.Embedding(V, D)
         # use pre-trained
         if args.word_Embedding:
             self.embed.weight.data.copy_(args.pretrained_weight)
         self.embed.weight.requires_grad = True
-        self.conv1 = nn.Conv2d(Ci, Co, (1, D))
-        self.conv2 = nn.Conv2d(Ci, Co, (2, D))
-        self.conv3 = nn.Conv2d(Ci, Co, (3, D))
-        
+        self.conv1 = nn.Conv2d(Ci, Co, (K, D))
 
     
     def forward(self, q1):
@@ -33,22 +29,20 @@ class CNN_Text(nn.Module):
         # print q1.shape
         q1 = q1.unsqueeze(1)  # batch_size * 1 * n * d
         # print q1.shape
-        q1_1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
-        q1_2 = F.tanh(self.conv2(q1))  # batch_size * out_channel * n-2
-        q1_3 = F.tanh(self.conv3(q1))  # batch_size * out_channel * n-2
-        print q1_1.shape
-        print q1_2.shape
-        print q1_3.shape
-        # q1 = q1.squeeze(3)
-        
-        # # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        # q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
-        # return q1
+        q1 = F.tanh(self.conv1(q1))  # batch_size * out_channel * n-2
+        # print q1.shape
+        q1 = q1.squeeze(3)
+        # print q1.shape
+        # q1 = F.avg_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
+        q1 = F.max_pool1d(q1, q1.size(2)).squeeze(2) # batch_size * out_channel
+        return q1
 
 class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
-        self.cnn = CNN_Text(args)
+        self.cnn1 = CNN_Text(args, window_size=1)
+        self.cnn2 = CNN_Text(args, window_size=2)
+        self.cnn3 = CNN_Text(args, window_size=3)
         self.fc1 = nn.Linear(4, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
@@ -70,9 +64,11 @@ class CNN_Sim(nn.Module):
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
-        cnn = self.cnn        
-        q1 = cnn.forward(q1)
-        q2 = cnn.forward(q2)
+        cnn1 = self.cnn1
+        cnn2 = self.cnn2
+        cnn3 = self.cnn3        
+        q1 = cnn3.forward(q1)
+        q2 = cnn3.forward(q2)
         cosine_value = F.cosine_similarity(q1, q2).view(-1, 1)        
         dot_value     = torch.bmm(q1.view(q1.size()[0], 1, q1.size()[1]), q2.view(q1.size()[0], q1.size()[1], 1)).view(q1.size()[0], 1)
         dist_value    = self.dist(q1, q2).view(q1.size()[0], 1)
