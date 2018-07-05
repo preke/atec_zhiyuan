@@ -74,10 +74,10 @@ class Abcnn3(nn.Module):
         '''
         x1 = self.embed(x1)
         x2 = self.embed(x2)
-        print x1
-        print '======='
-        print x2
-        print '+++++'
+        # print x1
+        # print '======='
+        # print x2
+        # print '+++++'
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
         # print x1.shape, type(x1)
