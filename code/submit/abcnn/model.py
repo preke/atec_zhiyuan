@@ -42,8 +42,8 @@ class Abcnn3(nn.Module):
         self.dropout1 = nn.Dropout(p=0.1)
         self.dropout2 = nn.Dropout(p=0.1)
         self.embed = nn.Embedding(emb_num, emb_dim)
-        self.embed.weight.data.copy_(pretrained_weight)
-        self.embed.weight.requires_grad = False
+        # self.embed.weight.data.copy_(pretrained_weight)
+        # self.embed.weight.requires_grad = False
         for i in range(layer_size):
             self.abcnn1.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
             self.abcnn2.append(Abcnn2Portion(sentence_length, filter_width))
