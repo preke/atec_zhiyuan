@@ -80,7 +80,7 @@ class Abcnn3(nn.Module):
         # print x2.shape, type(x2)
         sim = []
         sim.append(self.cos_distance(self.ap[0](x1), self.ap[0](x2)))
-        sim.append(self.manh_distance(self.ap[0](x1), self.ap[0](x2)))
+        # sim.append(self.manh_distance(self.ap[0](x1), self.ap[0](x2)))
         for i in range(self.layer_size):
             x1, x2 = self.abcnn1[i](x1, x2)
             x1 = self.conv[i](x1)
