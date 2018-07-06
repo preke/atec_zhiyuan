@@ -128,7 +128,7 @@ class Abcnn1(nn.Module):
     fc : last linear layer(in paper use logistic regression)
     '''
 
-    def __init__(self, emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
         super(Abcnn1, self).__init__()
         self.layer_size = layer_size
         self.embed = nn.Embedding(emb_num, emb_dim)
