@@ -179,7 +179,7 @@ class Abcnn1(nn.Module):
         x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
-        
+
         sim = []
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
 
@@ -196,6 +196,7 @@ class Abcnn1(nn.Module):
         
         sim_fc = torch.cat(sim, dim=1)
         output = self.fc(sim_fc)
+        output = output.squeeze() 
         return output
 
 class Abcnn2(nn.Module):
