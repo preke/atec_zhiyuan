@@ -128,9 +128,12 @@ class Abcnn1(nn.Module):
     fc : last linear layer(in paper use logistic regression)
     '''
 
-    def __init__(self, emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True):
+    def __init__(self, emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
         super(Abcnn1, self).__init__()
         self.layer_size = layer_size
+        self.embed = nn.Embedding(emb_num, emb_dim)
+        self.embed.weight.data.copy_(pretrained_weight)
+
 
         if match == 'cosine':
             self.distance = cosine_similarity
@@ -171,6 +174,12 @@ class Abcnn1(nn.Module):
         output : 2-D torch Tensor
             size (batch_size, 1)
         '''
+
+        x1 = self.embed(x1)
+        x2 = self.embed(x2)
+        x1 = x1.unsqueeze(1)
+        x2 = x2.unsqueeze(1)
+        
         sim = []
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
 

@@ -92,7 +92,7 @@ if __name__ == '__main__':
     
 
 
-    abcnn = model.Abcnn3(
+    abcnn = model.Abcnn1(
         # emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True
         emb_dim = args.embed_dim,
         emb_num = args.embed_num,
