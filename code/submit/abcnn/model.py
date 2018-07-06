@@ -516,13 +516,13 @@ class WpLayer(nn.Module):
         else:
             return self.wp(x)        
     
-def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1 and classname.find('Layer') == -1:
-        nn.init.xavier_uniform_(m.weight)
-    elif classname.find('Linear') != -1:
-        nn.init.xavier_uniform_(m.weight)
-        nn.init.constant_(m.bias, 0.1)
-    elif classname.find('BatchNorm') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
+# def weights_init(m):
+#     classname = m.__class__.__name__
+#     if classname.find('Conv') != -1 and classname.find('Layer') == -1:
+#         nn.init.xavier_uniform_(m.weight)
+#     elif classname.find('Linear') != -1:
+#         nn.init.xavier_uniform_(m.weight)
+#         nn.init.constant_(m.bias, 0.1)
+#     elif classname.find('BatchNorm') != -1:
+#         m.weight.data.normal_(1.0, 0.02)
+#         m.bias.data.fill_(0)
