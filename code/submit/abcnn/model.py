@@ -74,14 +74,9 @@ class Abcnn3(nn.Module):
         '''
         x1 = self.embed(x1)
         x2 = self.embed(x2)
-        # print x1
-        # print '======='
-        # print x2
-        # print '+++++'
         x1 = x1.unsqueeze(1)
         x2 = x2.unsqueeze(1)
-        # print x1.shape, type(x1)
-        # print x2.shape, type(x2)
+
         sim = []
         sim.append(self.cos_distance(self.ap[0](x1), self.ap[0](x2)))
         # sim.append(self.manh_distance(self.ap[0](x1), self.ap[0](x2)))
@@ -90,27 +85,21 @@ class Abcnn3(nn.Module):
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
             cos_sim = self.cos_distance(self.ap[i+1](x1), self.ap[i+1](x2))
-            # print '============'
-            # print cos_sim
-            # print '============'
-            # print
+           
             sim.append(cos_sim)
             # sim.append(self.manh_distance(self.ap[i+1](x1), self.ap[i+1](x2)))
-            x1, x2 = self.abcnn2[i](x1, x2)
-        
-        # print 'x1__shape', x1.shape
-        # print 'x2__shape', x2.shape    
-        
+            x1, x2 = self.abcnn2[i](x1, x2)        
 
         sim_fc = torch.cat(sim, dim=1)
+        print '==='
+        print sim_fc
+        print '---'
         output = self.fc1(sim_fc)
         # output = F.relu(output)
         # output = self.dropout1(output)
         
 
-        # output = self.fc2(output)
-        # output = F.relu(output)
-        # output = self.dropout2(output)
+        
         
 
         # output = self.fc3(output)
