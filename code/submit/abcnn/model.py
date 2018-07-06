@@ -295,8 +295,8 @@ class Abcnn1Portion(nn.Module):
         x2_attention = x2_attention.unsqueeze(1)
         x2 = torch.cat([x2, x2_attention], 1)
 
-        x1 = self.batchNorm(x1)
-        x2 = self.batchNorm(x2)
+        # x1 = self.batchNorm(x1)
+        # x2 = self.batchNorm(x2)
         
         return (x1, x2)
 
@@ -484,7 +484,8 @@ class WpLayer(nn.Module):
             self.sentence_length = sentence_length
             self.filter_width = filter_width
         else:
-            self.wp = nn.AvgPool2d((filter_width, 1), stride=1)
+            # self.wp = nn.AvgPool2d((filter_width, 1), stride=1)
+            self.wp = nn.MaxPool2d((filter_width, 1), stride=1)
 
     def forward(self, x, attention_matrix=None):
         '''
