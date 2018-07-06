@@ -45,7 +45,7 @@ def train(train_iter, dev_iter, model, args):
             # # weights = torch.cuda.FloatTensor([0.2, 0.8])
 
             loss = criterion(logit, target)
-            print loss
+            # print loss
             loss.backward()
             optimizer.step()
             
@@ -58,7 +58,7 @@ def train(train_iter, dev_iter, model, args):
                 
                 # logit = logit.max(1)[1].cpu().numpy()
                 
-                res_list.extend(logit)
+                res_list.extend(logit.data.cpu().numpy())
                 # ******* cosine_similarity ************
                 threshold = 0.5    
                 res_list = [1 if i > threshold else 0 for i in res_list]
@@ -94,7 +94,7 @@ def eval(data_iter, model, args):
         
         # ******* dot_product ************
         # logit = logit.max(1)[1].cpu().numpy()
-        res_list.extend(logit)
+        res_list.extend(logit.data.cpu().numpy())
         label_list.extend(target.data.cpu().numpy()) 
     # ******* cosine_sim ************
     threshold = 0.5
