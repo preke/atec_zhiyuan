@@ -39,6 +39,7 @@ class Abcnn3(nn.Module):
         self.fc1 = nn.Linear((layer_size+1), 1)
         self.fc2 = nn.Linear(100, 100)
         self.fc3 = nn.Linear(100, 1)
+        self.fc4 = nn.Linear(1, 1)
         self.dropout1 = nn.Dropout(p=0.1)
         self.dropout2 = nn.Dropout(p=0.1)
         self.embed = nn.Embedding(emb_num, emb_dim)
@@ -95,9 +96,9 @@ class Abcnn3(nn.Module):
         print sim_fc
         print '---'
         output = self.fc1(sim_fc)
-        # output = F.relu(output)
-        # output = self.dropout1(output)
-        
+        output = F.relu(output)
+        output = self.dropout1(output)
+        output = self.fc4(output)
 
         
         
