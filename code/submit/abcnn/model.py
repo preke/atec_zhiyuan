@@ -6,25 +6,7 @@ from torch.nn import functional as F
 
 
 class Abcnn1(nn.Module):
-    '''
-    ABCNN1
-    1. ABCNN1
-    2. wide convolution
-    3. W-ap
-    Attributes
-    ----------
-    layer_size : int
-        the number of (abcnn1)
-    distance : function
-        cosine similarity or manhattan
-    abcnn : list of abcnn1
-    conv : list of convolution layer
-    wp : list of w-ap pooling layer
-    ap : list of pooling layer
-    fc : last linear layer(in paper use logistic regression)
-    '''
-
-    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=1, match='cosine', inception=True, pretrained_weight=None):
         super(Abcnn1, self).__init__()
         self.layer_size = layer_size
         self.embed = nn.Embedding(emb_num, emb_dim)
@@ -133,11 +115,77 @@ class Abcnn1Portion(nn.Module):
         x2_attention = x2_attention.unsqueeze(1)
         x2 = torch.cat([x2, x2_attention], 1)
 
-        # x1 = self.batchNorm(x1)
-        # x2 = self.batchNorm(x2)
+        x1 = self.batchNorm(x1)
+        x2 = self.batchNorm(x2)
         
         return (x1, x2)
 
+
+class ConvLayer(nn.Module):
+    '''
+    convolution layer for abcnn
+    Attributes
+    ----------
+    inception : bool
+        whether use inception module
+    '''
+    def __init__(self, isAbcnn2, sentence_length, filter_width, filter_height, filter_channel, inception):
+        super(ConvLayer, self).__init__()
+        if inception:
+            self.model = InceptionModule(1 if isAbcnn2 else 2, sentence_length, filter_width, filter_height, filter_channel)
+        else:
+            self.model = convolution(1 if isAbcnn2 else 2, filter_width, filter_height, filter_channel, filter_width-1)
+
+    def forward(self, x):
+        '''
+        1. convlayer
+            size (batch_size, filter_channel, width, 1)
+        2. transpose
+            size (batch_size, 1, width, filter_channel)
+        Parameters
+        ----------
+        x : 4-D torch Tensor
+            size (batch_size, 1, width, height)
+        
+        Returns
+        -------
+        output : 4-D torch Tensor
+            size (batch_size, 1, width, filter_channel)
+        '''
+        output = self.model(x)
+        output = output.permute(0, 3, 2, 1)
+        return output
+
+class InceptionModule(nn.Module):
+    '''
+    inception module(not in paper)
+    first layer width is filter_width(given)
+    second layer width is filter_width + 4
+    third layer width is sentence_length
+    this helps model to be learned(when the number of layers > 8)
+    '''
+    def __init__(self, in_channel, sentence_length, filter_width, filter_height, filter_channel):
+        super(InceptionModule,self).__init__()
+        self.conv_1 = convolution(in_channel, filter_width, filter_height, int(filter_channel/3) + filter_channel - 3*int(filter_channel/3), filter_width-1)
+        self.conv_2 = convolution(in_channel, filter_width+4, filter_height, int(filter_channel/3), filter_width+1)
+        self.conv_3 = convolution(in_channel, sentence_length, filter_height, int(filter_channel/3), int((sentence_length+filter_width-2)/2))
+
+    def forward(self, x):
+        out_1 = self.conv_1(x)
+        out_2 = self.conv_2(x)
+        out_3 = self.conv_3(x)
+        output = torch.cat([out_1, out_2, out_3], dim=1)
+        return output
+
+def convolution(in_channel, filter_width, filter_height, filter_channel, padding):
+    '''convolution layer
+    '''
+    model = nn.Sequential(
+        nn.Conv2d(in_channel, filter_channel, (filter_width, filter_height), stride=1, padding=(padding, 0)),
+        nn.BatchNorm2d(filter_channel),
+        nn.Tanh()
+    )
+    return model
 
 def cosine_similarity(x1, x2):
     '''compute cosine similarity between x1 and x2
