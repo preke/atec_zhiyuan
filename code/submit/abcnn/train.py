@@ -61,7 +61,7 @@ def train(train_iter, dev_iter, model, args):
                 
                 res_list.extend(logit.data.cpu().numpy())
                 # ******* cosine_similarity ************
-                threshold = 0.5    
+                threshold = 0.3    
                 res_list = [1 if i > threshold else 0 for i in res_list]
                 label_list.extend(target.data.cpu().numpy())
                 acc = accuracy_score(res_list, label_list)
@@ -98,7 +98,7 @@ def eval(data_iter, model, args):
         res_list.extend(logit.data.cpu().numpy())
         label_list.extend(target.data.cpu().numpy()) 
     # ******* cosine_sim ************
-    threshold = 0.5
+    threshold = 0.3
     res_list = [1 if i > threshold else 0 for i in res_list] 
     f1 = f1_score(res_list, label_list)        
     print('\nEvaluation -  f1: {:.4f} \n'.format(f1))
