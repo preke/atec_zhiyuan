@@ -5,24 +5,6 @@ import torch.nn.functional as F
 from math import sqrt
 import numpy as np
 
-class GRU_Text(nn.Module):
-    def __init__(self):
-        self.hidden_dim = 300
-        self.bidirectional = True
-        self.batch_size = batch_size
-        self.dist = nn.PairwiseDistance(2)
-        self.device = device
-        self.word_embedding = nn.Embedding(vocab_size, embedding_dim)
-        self.word_embedding.weight.data.copy_(wordvec_matrix)
-        self.word_embedding.weight.requires_grad = True
-        
-        self.lstm1 = nn.GRU(embedding_dim, hidden_dim//2 if bidirectional else hidden_dim, batch_first=True, bidirectional=bidirectional)
-
-    def forward(self, q1):
-        text1_seq_embedding, text1_max_embedding = self.lstm_embedding(self.lstm1, text1_word_embedding, hidden_init)            
-
-
-
 
 class CNN_Text(nn.Module):
     def __init__(self, args, window_size):
@@ -110,10 +92,10 @@ class CNN_Sim(nn.Module):
         
         # gru
 
-        q1_gru = self.gru_embed(q1)
-        q2_gru = self.gru_embed(q2)
-        print 'q1_gru:', q1_gru.shape
-        print 'q2_gru:', q2_gru.shape
+        q1_seq_embedding, q1_max_embedding = self.gru_embed(q1)
+        q2_seq_embedding, q2_max_embedding = self.gru_embed(q2)
+        print 'q1_gru:', q1_seq_embedding.shape, q1_max_embedding.shape
+        print 'q2_gru:', q2_seq_embedding.shape, q2_max_embedding.shape
         
 
 
