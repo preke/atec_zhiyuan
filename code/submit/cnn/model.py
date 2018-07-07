@@ -54,7 +54,7 @@ class CNN_Sim(nn.Module):
         self.dist = nn.PairwiseDistance(2)
 
         self.gru_embed = nn.GRU(300, 300, batch_first=True, bidirectional=True)
-        self.mp = nn.MaxPool1d(hidden_dim, stride=1)
+        self.mp = nn.MaxPool1d(300, stride=1)
 
     def jaccard(self, list1, list2):
         reslist = []
