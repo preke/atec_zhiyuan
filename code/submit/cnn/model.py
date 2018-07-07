@@ -5,6 +5,25 @@ import torch.nn.functional as F
 from math import sqrt
 import numpy as np
 
+class GRU_Text(nn.Module):
+    def __init__(self):
+        self.hidden_dim = 300
+        self.bidirectional = True
+        self.batch_size = batch_size
+        self.dist = nn.PairwiseDistance(2)
+        self.device = device
+        self.word_embedding = nn.Embedding(vocab_size, embedding_dim)
+        self.word_embedding.weight.data.copy_(wordvec_matrix)
+        self.word_embedding.weight.requires_grad = True
+        
+        self.lstm1 = nn.GRU(embedding_dim, hidden_dim//2 if bidirectional else hidden_dim, batch_first=True, bidirectional=bidirectional)
+
+    def forward(self, q1):
+        text1_seq_embedding, text1_max_embedding = self.lstm_embedding(self.lstm1, text1_word_embedding, hidden_init)            
+
+
+
+
 class CNN_Text(nn.Module):
     def __init__(self, args, window_size):
         super(CNN_Text, self).__init__()
@@ -52,6 +71,8 @@ class CNN_Sim(nn.Module):
         self.fc4 = nn.Linear(100, 2)
         self.dist = nn.PairwiseDistance(2)
 
+        self.gru_embed = nn.GRU(300, 300, batch_first=True, bidirectional=True)
+
     def jaccard(self, list1, list2):
         reslist = []
         for idx in range(list1.size()[0]):
@@ -68,6 +89,7 @@ class CNN_Sim(nn.Module):
         cnn2 = self.cnn2
         cnn3 = self.cnn3        
         
+        # cnn
         q1_cnn1 = cnn1.forward(q1)
         q2_cnn1 = cnn1.forward(q2)
         cosine_value_1 = F.cosine_similarity(q1_cnn1, q2_cnn1).view(-1, 1)        
@@ -86,6 +108,14 @@ class CNN_Sim(nn.Module):
         dot_value_3     = torch.bmm(q1_cnn3.view(q1_cnn3.size()[0], 1, q1_cnn3.size()[1]), q2_cnn3.view(q1_cnn3.size()[0], q1_cnn3.size()[1], 1)).view(q1_cnn3.size()[0], 1)
         dist_value_3    = self.dist(q1_cnn3, q2_cnn3).view(q1_cnn3.size()[0], 1)
         
+        # gru
+
+        q1_gru = self.gru_embed(q1)
+        q2_gru = self.gru_embed(q2)
+        print 'q1_gru:', q1_gru.shape
+        print 'q2_gru:', q2_gru.shape
+        
+
 
         ans = torch.cat((
             dot_value_1, dist_value_1, cosine_value_1,
