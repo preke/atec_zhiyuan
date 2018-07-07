@@ -66,7 +66,7 @@ class CNN_Sim(nn.Module):
         # need to change device
         return torch.cuda.FloatTensor(reslist).view(-1, 1)
 
-    def lstm_embedding(self, lstm, word_embedding ,hidden_init):
+    def lstm_embedding(self, lstm, word_embedding):
         lstm_out,lstm_h = lstm(word_embedding, None)
         seq_embedding = torch.cat((lstm_h[0], lstm_h[1]), dim=1)
         return seq_embedding, self.mp(lstm_out).view(word_embedding.size()[0], -1)
