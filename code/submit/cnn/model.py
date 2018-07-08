@@ -41,10 +41,8 @@ class CNN_Text(nn.Module):
 class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
-        self.cnn1 = CNN_Text(args, window_size=1)
-        self.cnn2 = CNN_Text(args, window_size=2)
-        self.cnn3 = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(10, 100)
+        self.cnn = CNN_Text(args, window_size=3)
+        self.fc1 = nn.Linear(4, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -74,42 +72,24 @@ class CNN_Sim(nn.Module):
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
-        cnn1 = self.cnn1
-        cnn2 = self.cnn2
-        cnn3 = self.cnn3        
-        
+        cnn = self.cnn
         # cnn
-        q1_cnn1 = cnn1.forward(q1)
-        q2_cnn1 = cnn1.forward(q2)
-        cosine_value_1 = F.cosine_similarity(q1_cnn1, q2_cnn1).view(-1, 1)        
-        dot_value_1     = torch.bmm(q1_cnn1.view(q1_cnn1.size()[0], 1, q1_cnn1.size()[1]), q2_cnn1.view(q1_cnn1.size()[0], q1_cnn1.size()[1], 1)).view(q1_cnn1.size()[0], 1)
-        dist_value_1    = self.dist(q1_cnn1, q2_cnn1).view(q1_cnn1.size()[0], 1)
-
-        q1_cnn2 = cnn2.forward(q1)
-        q2_cnn2 = cnn2.forward(q2)
-        cosine_value_2 = F.cosine_similarity(q1_cnn2, q2_cnn2).view(-1, 1)        
-        dot_value_2     = torch.bmm(q1_cnn2.view(q1_cnn2.size()[0], 1, q1_cnn2.size()[1]), q2_cnn2.view(q1_cnn2.size()[0], q1_cnn2.size()[1], 1)).view(q1_cnn2.size()[0], 1)
-        dist_value_2    = self.dist(q1_cnn2, q2_cnn2).view(q1_cnn2.size()[0], 1)
-
-        q1_cnn3 = cnn3.forward(q1)
-        q2_cnn3 = cnn3.forward(q2)
-        cosine_value_3 = F.cosine_similarity(q1_cnn3, q2_cnn3).view(-1, 1)        
-        dot_value_3     = torch.bmm(q1_cnn3.view(q1_cnn3.size()[0], 1, q1_cnn3.size()[1]), q2_cnn3.view(q1_cnn3.size()[0], q1_cnn3.size()[1], 1)).view(q1_cnn3.size()[0], 1)
-        dist_value_3    = self.dist(q1_cnn3, q2_cnn3).view(q1_cnn3.size()[0], 1)
+        q1_cnn = cnn.forward(q1)
+        q2_cnn = cnn.forward(q2)
+        cosine_value = F.cosine_similarity(q1_cnn, q2_cnn).view(-1, 1)        
+        dot_value     = torch.bmm(q1_cnn.view(q1_cnn.size()[0], 1, q1_cnn.size()[1]), q2_cnn.view(q1_cnn.size()[0], q1_cnn.size()[1], 1)).view(q1_cnn.size()[0], 1)
+        dist_value    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
         
         # gru
-
-        q1_seq_embedding, q1_max_embedding = self.lstm_embedding(self.gru_embed, q1, hidden_init=None)
-        q2_seq_embedding, q2_max_embedding = self.lstm_embedding(self.gru_embed, q2, hidden_init=None)
+        q1_seq_embedding, q1_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
+        q2_seq_embedding, q2_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
         print 'q1_gru:', q1_seq_embedding.shape, q1_max_embedding.shape
         print 'q2_gru:', q2_seq_embedding.shape, q2_max_embedding.shape
         
 
 
         ans = torch.cat((
-            dot_value_1, dist_value_1, cosine_value_1,
-            dot_value_2, dist_value_2, cosine_value_2,
-            dot_value_3, dist_value_3, cosine_value_3,
+            dot_value, dist_value, cosine_value,
             jacarrd_value
             ), dim=1)        
         
