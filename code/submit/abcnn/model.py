@@ -6,7 +6,7 @@ from torch.nn import functional as F
 
 
 class Abcnn1(nn.Module):
-    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=1, match='cosine', inception=True, pretrained_weight=None):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
         super(Abcnn1, self).__init__()
         self.layer_size = layer_size
         self.embed = nn.Embedding(emb_num, emb_dim)
@@ -79,7 +79,8 @@ class Abcnn1(nn.Module):
 
 
 class Abcnn1Portion(nn.Module):
-    '''Part of Abcnn1
+    '''
+        Part of Abcnn1
     '''
 
     def __init__(self, in_dim, out_dim):
@@ -303,14 +304,3 @@ class WpLayer(nn.Module):
         
         else:
             return self.wp(x)        
-    
-# def weights_init(m):
-#     classname = m.__class__.__name__
-#     if classname.find('Conv') != -1 and classname.find('Layer') == -1:
-#         nn.init.xavier_uniform_(m.weight)
-#     elif classname.find('Linear') != -1:
-#         nn.init.xavier_uniform_(m.weight)
-#         nn.init.constant_(m.bias, 0.1)
-#     elif classname.find('BatchNorm') != -1:
-#         m.weight.data.normal_(1.0, 0.02)
-#         m.bias.data.fill_(0)
