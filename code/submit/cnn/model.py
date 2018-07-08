@@ -86,7 +86,7 @@ class CNN_Sim(nn.Module):
         dist_value_cnn    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
         print '====='
         # print (q1_cnn * q2_cnn).shape
-        print torch.max(q1_cnn* q2_cnn, keepdim=True).shape
+        # print torch.max(q1_cnn* q2_cnn, keepdim=True).shape
         print torch.max(q1_cnn* q2_cnn, dim=1).shape
         print '====='
         mul_max_cnn = torch.max(q1_cnn * q2_cnn).view(-1, 1)
