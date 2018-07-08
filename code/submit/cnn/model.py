@@ -87,8 +87,8 @@ class CNN_Sim(nn.Module):
         # print 'q2_gru:', q2_seq_embedding.shape, q2_max_embedding.shape
         
         cosine_value_lstm1 = F.cosine_similarity(q1_seq_embedding, q2_seq_embedding).view(-1, 1)        
-        dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_se q_embedding.size()[0], 1, q1_se q_embedding.size()[1]), q2_sq_embedding.view(q1_seq_embedding.size()[0], q1_sq_embedding.size()[1], 1)).view(q1_se q_embedding.size()[0], 1)
-        dist_value_lstm1    = self.dist(q1_seq_embedding, q2_se q_embedding).view(q1_se q_embedding.size()[0], 1)
+        dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_seq_embedding.size()[0], 1, q1_seq_embedding.size()[1]), q2_seq_embedding.view(q1_seq_embedding.size()[0], q1_seq_embedding.size()[1], 1)).view(q1_seq_embedding.size()[0], 1)
+        dist_value_lstm1    = self.dist(q1_seq_embedding, q2_seq_embedding).view(q1_seq_embedding.size()[0], 1)
 
         ans = torch.cat((
             dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
