@@ -22,8 +22,10 @@ def train(train_iter, dev_iter, model, args):
     for epoch in range(1, args.epochs+1): 
         print('\nEpoch:%s\n'%epoch)
 
-        model.train()
+        # model.train()
         for batch in train_iter:
+            model.train()
+
             res_list = []
             label_list = []
             question1, question2, target = batch.question1, batch.question2, batch.label
