@@ -76,6 +76,10 @@ class CNN_Sim(nn.Module):
         # cnn
         q1_cnn = cnn.forward(q1)
         q2_cnn = cnn.forward(q2)
+        print q1_cnn.shape
+        print q2_cnn.shape
+        test = q1_cnn * q2_cnn
+        print test.shape
         cosine_value_cnn = F.cosine_similarity(q1_cnn, q2_cnn).view(-1, 1)        
         dot_value_cnn     = torch.bmm(q1_cnn.view(q1_cnn.size()[0], 1, q1_cnn.size()[1]), q2_cnn.view(q1_cnn.size()[0], q1_cnn.size()[1], 1)).view(q1_cnn.size()[0], 1)
         dist_value_cnn    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
