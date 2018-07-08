@@ -76,8 +76,8 @@ class CNN_Sim(nn.Module):
         # cnn
         q1_cnn = cnn.forward(q1)
         q2_cnn = cnn.forward(q2)
-        print q1_cnn.shape
-        print q2_cnn.shape
+        # print q1_cnn.shape
+        # print q2_cnn.shape
         
         
 
