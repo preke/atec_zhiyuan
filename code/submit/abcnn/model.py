@@ -233,7 +233,8 @@ def attention_matrix(x1, x2, eps=1e-6):
     return (euclidean + one).reciprocal()
 
 class ApLayer(nn.Module):
-    '''column-wise averaging over all columns
+    '''
+    column-wise averaging over all columns
     '''
 
     def __init__(self, pool_width, height):

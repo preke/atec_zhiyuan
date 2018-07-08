@@ -32,7 +32,7 @@ def train(train_iter, dev_iter, model, args):
             optimizer.zero_grad()
             
             logit = model(question1, question2)
-            print logit
+            # print logit
             # ****** cosine_similarity *********
             target = target.type(torch.cuda.FloatTensor)
             # criterion = nn.MSELoss()
@@ -42,8 +42,8 @@ def train(train_iter, dev_iter, model, args):
             # ******* dot_product ************
             # target = target.type(torch.FloatTensor)
             # target = target.to(device) 
-            weights = torch.cuda.FloatTensor([[0.8]]*args.batch_size)
-            print weights.shape
+            weights = torch.cuda.FloatTensor([[]]*args.batch_size)
+            # print weights.shape
             criterion = nn.BCEWithLogitsLoss(weight=weights)
             
 
