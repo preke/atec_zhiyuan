@@ -100,10 +100,10 @@ class CNN_Sim(nn.Module):
         cosine_value_lstm1 = F.cosine_similarity(q1_seq_embedding, q2_seq_embedding).view(-1, 1)        
         dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_seq_embedding.size()[0], 1, q1_seq_embedding.size()[1]), q2_seq_embedding.view(q1_seq_embedding.size()[0], q1_seq_embedding.size()[1], 1)).view(q1_seq_embedding.size()[0], 1)
         dist_value_lstm1    = self.dist(q1_seq_embedding, q2_seq_embedding).view(q1_seq_embedding.size()[0], 1)
-        mul_max_lstm1 = torch.max(q1_lstm1 * q2_lstm1)
-        mul_min_lstm1 = torch.min(q1_lstm1 * q2_lstm1)
-        sub_max_lstm1 = torch.abs(torch.max(torch.sub(q1_lstm1, q2_lstm1)))
-        sub_min_lstm1 = torch.abs(torch.min(torch.sub(q1_lstm1, q2_lstm1)))
+        mul_max_lstm1 = torch.max(q1_seq_embedding * q1_seq_embedding)
+        mul_min_lstm1 = torch.min(q1_seq_embedding * q1_seq_embedding)
+        sub_max_lstm1 = torch.abs(torch.max(torch.sub(q1_seq_embedding, q1_seq_embedding)))
+        sub_min_lstm1 = torch.abs(torch.min(torch.sub(q1_seq_embedding, q1_seq_embedding)))
         
         ans = torch.cat((
             dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1, dist_value_lstm1,
