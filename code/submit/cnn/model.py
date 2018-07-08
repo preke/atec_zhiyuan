@@ -85,7 +85,7 @@ class CNN_Sim(nn.Module):
         dot_value_cnn     = torch.bmm(q1_cnn.view(q1_cnn.size()[0], 1, q1_cnn.size()[1]), q2_cnn.view(q1_cnn.size()[0], q1_cnn.size()[1], 1)).view(q1_cnn.size()[0], 1)
         dist_value_cnn    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
         print '====='
-        print (q1_cnn * q2_cnn, keepdim=True, dim = 1).shape
+        print torch.max(q1_cnn * q2_cnn, keepdim=True, dim = 1).shape
         print '====='
         mul_max_cnn = torch.max(q1_cnn * q2_cnn).view(-1, 1)
         mul_min_cnn = torch.min(q1_cnn * q2_cnn).view(-1, 1)
