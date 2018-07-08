@@ -42,7 +42,7 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(7, 100)
+        self.fc1 = nn.Linear(17, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -78,15 +78,18 @@ class CNN_Sim(nn.Module):
         q2_cnn = cnn.forward(q2)
         print q1_cnn.shape
         print q2_cnn.shape
-        test = q1_cnn * q2_cnn
-        print test
-        print 
-        print torch.max(test)
+        
         
 
         cosine_value_cnn = F.cosine_similarity(q1_cnn, q2_cnn).view(-1, 1)        
         dot_value_cnn     = torch.bmm(q1_cnn.view(q1_cnn.size()[0], 1, q1_cnn.size()[1]), q2_cnn.view(q1_cnn.size()[0], q1_cnn.size()[1], 1)).view(q1_cnn.size()[0], 1)
         dist_value_cnn    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
+        mul_max_cnn = torch.max(q1_cnn * q2_cnn)
+        mul_min_cnn = torch.min(q1_cnn * q2_cnn)
+
+        sub_max_cnn = torch.abs(torch.max(torcn.sub(q1_cnn, q2_cnn)))
+        sub_min_cnn = torch.abs(torch.min(torcn.sub(q1_cnn, q2_cnn)))
+        # mul_max_cnn = torch.max(q1_cnn * q2_cnn)
         
         # gru
         q1_seq_embedding, q1_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
@@ -97,10 +100,16 @@ class CNN_Sim(nn.Module):
         cosine_value_lstm1 = F.cosine_similarity(q1_seq_embedding, q2_seq_embedding).view(-1, 1)        
         dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_seq_embedding.size()[0], 1, q1_seq_embedding.size()[1]), q2_seq_embedding.view(q1_seq_embedding.size()[0], q1_seq_embedding.size()[1], 1)).view(q1_seq_embedding.size()[0], 1)
         dist_value_lstm1    = self.dist(q1_seq_embedding, q2_seq_embedding).view(q1_seq_embedding.size()[0], 1)
-
+        mul_max_lstm1 = torch.max(q1_lstm1 * q2_lstm1)
+        mul_min_lstm1 = torch.min(q1_lstm1 * q2_lstm1)
+        sub_max_lstm1 = torch.abs(torch.max(torcn.sub(q1_lstm1, q2_lstm1)))
+        sub_min_lstm1 = torch.abs(torch.min(torcn.sub(q1_lstm1, q2_lstm1)))
+        
         ans = torch.cat((
-            dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
-            cosine_value_cnn, dot_value_cnn, dist_value_cnn, 
+            dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1, dist_value_lstm1,
+            cosine_value_cnn, dot_value_cnn, dist_value_cnn, mul_max_cnn,
+            mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
+            mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
             jacarrd_value
             ), dim=1)        
         
