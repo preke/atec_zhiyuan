@@ -110,13 +110,13 @@ class CNN_Sim(nn.Module):
         sub_min_lstm1 = torch.abs(torch.min(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
 
         
-        list1 = [dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
-            cosine_value_cnn, dot_value_cnn, dist_value_cnn,
-            mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
-            mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
-            jacarrd_value]
-        for i in list1:
-            print i.shape
+        # list1 = [dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
+        #     cosine_value_cnn, dot_value_cnn, dist_value_cnn,
+        #     mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
+        #     mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
+        #     jacarrd_value]
+        # for i in list1:
+        #     print i.shape
 
         ans = torch.cat((
             dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
