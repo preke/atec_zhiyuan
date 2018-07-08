@@ -42,7 +42,7 @@ def train(train_iter, dev_iter, model, args):
             # ******* dot_product ************
             # target = target.type(torch.FloatTensor)
             # target = target.to(device) 
-            weights = torch.cuda.FloatTensor([[]]*args.batch_size)
+            weights = torch.cuda.FloatTensor([[0.8]]*args.batch_size)
             # print weights.shape
             criterion = nn.BCEWithLogitsLoss(weight=weights)
             
