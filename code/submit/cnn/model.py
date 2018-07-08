@@ -42,7 +42,7 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(4, 100)
+        self.fc1 = nn.Linear(7, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -92,6 +92,7 @@ class CNN_Sim(nn.Module):
 
         ans = torch.cat((
             dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
+            cosine_value_cnn, dot_value_cnn, dist_value_cnn, 
             jacarrd_value
             ), dim=1)        
         
