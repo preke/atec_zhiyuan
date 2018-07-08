@@ -42,7 +42,7 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(17, 100)
+        self.fc1 = nn.Linear(15, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -106,8 +106,8 @@ class CNN_Sim(nn.Module):
         sub_min_lstm1 = torch.abs(torch.min(torch.sub(q1_seq_embedding, q1_seq_embedding))).view(-1, 1)
         
         ans = torch.cat((
-            dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1, dist_value_lstm1,
-            cosine_value_cnn, dot_value_cnn, dist_value_cnn, mul_max_cnn,
+            dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
+            cosine_value_cnn, dot_value_cnn, dist_value_cnn,
             mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
             mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
             jacarrd_value
