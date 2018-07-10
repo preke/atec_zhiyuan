@@ -121,15 +121,15 @@ class CNN_Sim(nn.Module):
         
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
-        ans = F.tanh(ans)
+        ans = F.relu(ans)
         
         ans = self.fc2(ans)
         ans = self.dropout2(ans)
-        ans = F.tanh(ans)
+        ans = F.relu(ans)
         
         ans = self.fc3(ans)
         ans = self.dropout3(ans)
-        ans = F.tanh(ans)
+        ans = F.relu(ans)
 
         ans = self.fc4(ans)
         return ans
