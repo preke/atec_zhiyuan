@@ -42,7 +42,7 @@ class CNN_Sim(nn.Module):
     def __init__(self, args):
         super(CNN_Sim, self).__init__()
         self.cnn = CNN_Text(args, window_size=3)
-        self.fc1 = nn.Linear(15, 100)
+        self.fc1 = nn.Linear(4, 100)
         self.dropout1 = nn.Dropout(p=0.1)
         self.fc2 = nn.Linear(100, 100)
         self.dropout2 = nn.Dropout(p=0.1)
@@ -69,6 +69,8 @@ class CNN_Sim(nn.Module):
         seq_embedding = torch.cat((lstm_h[0], lstm_h[1]), dim=1)
         return seq_embedding, self.mp(lstm_out).view(word_embedding.size()[0], -1)
 
+    def cross_prod(self, v1, v2):
+        pass
 
     def forward(self, q1, q2):
         jacarrd_value = self.jaccard(q1, q2)
@@ -106,12 +108,12 @@ class CNN_Sim(nn.Module):
         # sub_max_lstm1 = torch.abs(torch.max(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
         # sub_min_lstm1 = torch.abs(torch.min(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
 
-        cross_cnn = torch.cross(q1_cnn, q2_cnn)
-        print type(cross_cnn)
+        # cross_cnn = self.cross_prod(q1_cnn, q2_cnn)
+        # print type(cross_cnn)
     
         ans = torch.cat((
             # dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
-            cosine_value_cnn, dot_value_cnn, dist_value_cnn, cross_cnn,
+            cosine_value_cnn, dot_value_cnn, dist_value_cnn,
             # mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
             # mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
             jacarrd_value
@@ -119,15 +121,15 @@ class CNN_Sim(nn.Module):
         
         ans = self.fc1(ans)
         ans = self.dropout1(ans)
-        ans = F.relu(ans)
+        ans = F.tanh(ans)
         
         ans = self.fc2(ans)
         ans = self.dropout2(ans)
-        ans = F.relu(ans)
+        ans = F.tanh(ans)
         
         ans = self.fc3(ans)
         ans = self.dropout3(ans)
-        ans = F.relu(ans)
+        ans = F.tanh(ans)
 
         ans = self.fc4(ans)
         return ans
