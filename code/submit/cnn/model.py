@@ -85,44 +85,35 @@ class CNN_Sim(nn.Module):
         dot_value_cnn     = torch.bmm(q1_cnn.view(q1_cnn.size()[0], 1, q1_cnn.size()[1]), q2_cnn.view(q1_cnn.size()[0], q1_cnn.size()[1], 1)).view(q1_cnn.size()[0], 1)
         dist_value_cnn    = self.dist(q1_cnn, q2_cnn).view(q1_cnn.size()[0], 1)
         
-        mul_max_cnn = torch.max(q1_cnn * q2_cnn, dim=1)[0].view(-1, 1)
-        mul_min_cnn = torch.min(q1_cnn * q2_cnn, dim=1)[0].view(-1, 1)
+        # mul_max_cnn = torch.max(q1_cnn * q2_cnn, dim=1)[0].view(-1, 1)
+        # mul_min_cnn = torch.min(q1_cnn * q2_cnn, dim=1)[0].view(-1, 1)
 
-        sub_max_cnn = torch.abs(torch.max(q1_cnn - q2_cnn, dim=1)[0]).view(-1, 1)
-        sub_min_cnn = torch.abs(torch.min(q1_cnn - q2_cnn, dim=1)[0]).view(-1, 1)
-
-        # mul_max_cnn = torch.max(q1_cnn * q2_cnn)
+        # sub_max_cnn = torch.abs(torch.max(q1_cnn - q2_cnn, dim=1)[0]).view(-1, 1)
+        # sub_min_cnn = torch.abs(torch.min(q1_cnn - q2_cnn, dim=1)[0]).view(-1, 1)
         
-        # gru
-        q1_seq_embedding, q1_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
-        q2_seq_embedding, q2_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
-        # print 'q1_gru:', q1_seq_embedding.shape, q1_max_embedding.shape
-        # print 'q2_gru:', q2_seq_embedding.shape, q2_max_embedding.shape
+        # # gru
+        # q1_seq_embedding, q1_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
+        # q2_seq_embedding, q2_max_embedding = self.lstm_embedding(self.gru_embed, cnn.embed(q1), hidden_init=None)
         
-        cosine_value_lstm1 = F.cosine_similarity(q1_seq_embedding, q2_seq_embedding).view(-1, 1)        
-        dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_seq_embedding.size()[0], 1, q1_seq_embedding.size()[1]), q2_seq_embedding.view(q1_seq_embedding.size()[0], q1_seq_embedding.size()[1], 1)).view(q1_seq_embedding.size()[0], 1)
-        dist_value_lstm1    = self.dist(q1_seq_embedding, q2_seq_embedding).view(q1_seq_embedding.size()[0], 1)
         
-        mul_max_lstm1 = torch.max(q1_seq_embedding * q1_seq_embedding, dim=1)[0].view(-1, 1)
-        mul_min_lstm1 = torch.min(q1_seq_embedding * q1_seq_embedding, dim=1)[0].view(-1, 1)
-
-        sub_max_lstm1 = torch.abs(torch.max(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
-        sub_min_lstm1 = torch.abs(torch.min(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
-
+        # cosine_value_lstm1 = F.cosine_similarity(q1_seq_embedding, q2_seq_embedding).view(-1, 1)        
+        # dot_value_lstm1     = torch.bmm(q1_seq_embedding.view(q1_seq_embedding.size()[0], 1, q1_seq_embedding.size()[1]), q2_seq_embedding.view(q1_seq_embedding.size()[0], q1_seq_embedding.size()[1], 1)).view(q1_seq_embedding.size()[0], 1)
+        # dist_value_lstm1    = self.dist(q1_seq_embedding, q2_seq_embedding).view(q1_seq_embedding.size()[0], 1)
         
-        # list1 = [dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
-        #     cosine_value_cnn, dot_value_cnn, dist_value_cnn,
-        #     mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
-        #     mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
-        #     jacarrd_value]
-        # for i in list1:
-        #     print i.shape
+        # mul_max_lstm1 = torch.max(q1_seq_embedding * q1_seq_embedding, dim=1)[0].view(-1, 1)
+        # mul_min_lstm1 = torch.min(q1_seq_embedding * q1_seq_embedding, dim=1)[0].view(-1, 1)
 
+        # sub_max_lstm1 = torch.abs(torch.max(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
+        # sub_min_lstm1 = torch.abs(torch.min(q1_seq_embedding - q1_seq_embedding, dim=1)[0]).view(-1, 1)
+
+        cross_cnn = torch.cross(q1_cnn, q2_cnn)
+        print type(cross_cnn)
+    
         ans = torch.cat((
-            dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
-            cosine_value_cnn, dot_value_cnn, dist_value_cnn,
-            mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
-            mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
+            # dot_value_lstm1, dist_value_lstm1, cosine_value_lstm1,
+            cosine_value_cnn, dot_value_cnn, dist_value_cnn, cross_cnn,
+            # mul_max_cnn, mul_min_cnn, sub_max_cnn, sub_min_cnn,
+            # mul_max_lstm1, mul_min_lstm1, sub_max_lstm1, sub_min_lstm1,
             jacarrd_value
             ), dim=1)        
         
