@@ -20,55 +20,34 @@ class Abcnn1(nn.Module):
 
         self.abcnn = nn.ModuleList()
         self.conv = nn.ModuleList()
-        self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
+        self.ap = nn.ModuleList([ApLayer(emb_dim)])
         self.wp = nn.ModuleList()
         self.fc = nn.Linear(layer_size+1, 1)
 
         for i in range(layer_size):
-            self.abcnn.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
+            self.abcnn.append(Abcnn1Portion(emb_dim if i == 0 else filter_channel))
             self.conv.append(ConvLayer(False, sentence_length, filter_width, emb_dim if i == 0 else filter_channel, filter_channel, inception))
-            self.ap.append(ApLayer(sentence_length + filter_width - 1, filter_channel))
+            # self.ap.append(ApLayer(sentence_length + filter_width - 1, filter_channel))
+            self.ap.append(ApLayer(filter_channel))
             self.wp.append(WpLayer(sentence_length, filter_width, False))
 
     def forward(self, x1, x2):
-        '''
-        1. stack sentence vector similarity
-        2. for layer_size
-            abcnn1
-            convolution
-            stack sentence vector similarity
-            W-ap for next loop x1, x2
-        
-        3. concatenate similarity list
-            size (batch_size, layer_size + 1)
-        4. Linear layer
-            size (batch_size, 1)
-        Parameters
-        ----------
-        x1, x2 : 4-D torch Tensor
-            size (batch_size, 1, width, emb_dim)
-        Returns
-        -------
-        output : 2-D torch Tensor
-            size (batch_size, 1)
-        '''
-
         x1 = self.embed(x1)
-        x2 = self.embed(x2)
         x1 = x1.unsqueeze(1)
+        # (batch_size, 1, length, emb_dim)
+        x2 = self.embed(x2)
         x2 = x2.unsqueeze(1)
+        # (batch_size, 1, length, emb_dim)
 
         sim = []
-        print x1.shape
-        print self.ap[0](x1).shape
-
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
 
         for i in range(self.layer_size):
             x1, x2 = self.abcnn[i](x1, x2)
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
-
+            print 'x1 shape', x1.shape
+            print 'x2 shape', x2.shape
             sim.append(self.distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             
             x1 = self.wp[i](x1)
@@ -239,28 +218,13 @@ class ApLayer(nn.Module):
     '''
     column-wise averaging over all columns
     '''
-
-    def __init__(self, pool_width, height):
+    def __init__(self, height):
         super(ApLayer, self).__init__()
-        self.ap = nn.AvgPool2d((pool_width, 1), stride=1)
         self.height = height
 
     def forward(self, x):
-        '''
-        1. average pooling
-            x size (batch_size, 1, 1, height)
-        2. representation vector for the sentence
-            output size (batch_size, height)
-        Parameters
-        ----------
-        x : 4-D torch Tensor
-            convolution output of size (batch_size, 1, sentence_length, height)
-        
-        Returns
-        -------
-        output : 2-D torch Tensor
-            representation vector of size (batch_size, height)
-        '''
+        poor_width = x.shape[2]
+        self.ap    = nn.AvgPool2d((pool_width, 1), stride=1)
         return self.ap(x).view([-1, self.height])
 
 class WpLayer(nn.Module):
