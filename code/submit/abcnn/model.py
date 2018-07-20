@@ -59,6 +59,7 @@ class Abcnn1(nn.Module):
         x2 = x2.unsqueeze(1)
 
         sim = []
+        print x1.shape
         print self.ap[0](x1).shape
 
         sim.append(self.distance(self.ap[0](x1), self.ap[0](x2)))
