@@ -96,7 +96,7 @@ if __name__ == '__main__':
         # emb_dim, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True
         emb_dim           = args.embed_dim,
         emb_num           = args.embed_num,
-        sentence_length   = 30,
+        sentence_length   = 25,
         filter_width      = args.kernel_size,
         filter_channel    = args.kernel_num,
         pretrained_weight = args.pretrained_weight
