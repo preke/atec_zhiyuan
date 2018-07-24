@@ -21,8 +21,7 @@ class Abcnn1(nn.Module):
         for i in range(layer_size):
             self.abcnn.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
             self.conv.append(ConvLayer(False, sentence_length, filter_width, emb_dim if i == 0 else filter_channel, filter_channel, inception))
-            # self.ap.append(ApLayer(sentence_length + filter_width - 1, filter_channel))
-            self.ap.append(ApLayer(sentence_length, filter_channel))
+            self.ap.append(ApLayer(sentence_length + filter_width - 1, filter_channel))
             self.wp.append(WpLayer(sentence_length, filter_width, False))
 
     def forward(self, x1, x2):
@@ -40,8 +39,6 @@ class Abcnn1(nn.Module):
             x1, x2 = self.abcnn[i](x1, x2)
             x1 = self.conv[i](x1)
             x2 = self.conv[i](x2)
-            print 'x1 shape', x1.shape
-            print 'x2 shape', x2.shape
             sim.append(self.distance(self.ap[i+1](x1), self.ap[i+1](x2)))
             
             x1 = self.wp[i](x1)
