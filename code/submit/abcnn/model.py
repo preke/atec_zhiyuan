@@ -6,29 +6,23 @@ from torch.nn import functional as F
 
 
 class Abcnn1(nn.Module):
-    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, match='cosine', inception=True, pretrained_weight=None):
+    def __init__(self, emb_dim, emb_num, sentence_length, filter_width, filter_channel=100, layer_size=2, inception=True, pretrained_weight=None):
         super(Abcnn1, self).__init__()
         self.layer_size = layer_size
         self.embed = nn.Embedding(emb_num, emb_dim)
         self.embed.weight.data.copy_(pretrained_weight)
-
-
-        if match == 'cosine':
-            self.distance = cosine_similarity
-        else:
-            self.distance = manhattan_distance
-
+        self.distance = cosine_similarity
         self.abcnn = nn.ModuleList()
         self.conv = nn.ModuleList()
-        self.ap = nn.ModuleList([ApLayer(emb_dim)])
+        self.ap = nn.ModuleList([ApLayer(sentence_length, emb_dim)])
         self.wp = nn.ModuleList()
         self.fc = nn.Linear(layer_size+1, 1)
 
         for i in range(layer_size):
-            self.abcnn.append(Abcnn1Portion(emb_dim if i == 0 else filter_channel))
+            self.abcnn.append(Abcnn1Portion(sentence_length, emb_dim if i == 0 else filter_channel))
             self.conv.append(ConvLayer(False, sentence_length, filter_width, emb_dim if i == 0 else filter_channel, filter_channel, inception))
             # self.ap.append(ApLayer(sentence_length + filter_width - 1, filter_channel))
-            self.ap.append(ApLayer(filter_channel))
+            self.ap.append(ApLayer(sentence_length, filter_channel))
             self.wp.append(WpLayer(sentence_length, filter_width, False))
 
     def forward(self, x1, x2):
@@ -68,7 +62,7 @@ class Abcnn1Portion(nn.Module):
     def __init__(self, in_dim, out_dim):
         super(Abcnn1Portion, self).__init__()
         self.batchNorm = nn.BatchNorm2d(2)
-        self.attention_feature_layer = nn.Linear(in_dim, out_dim)
+        self.attention_feature_layer = nn.Linear(in_dim, out_dim) # w0 and w1
 
     def forward(self, x1, x2):
         '''
@@ -202,7 +196,7 @@ def attention_matrix(x1, x2, eps=1e-6):
     Parameters
     ----------
     x1, x2 : 4-D torch Tensor
-        size (batch_size, 1, sentence_length, h)
+        size (batch_size, 1, sentence_length, emb_dim)
     
     Returns
     -------
@@ -218,13 +212,11 @@ class ApLayer(nn.Module):
     '''
     column-wise averaging over all columns
     '''
-    def __init__(self, height):
+    def __init__(self, pool_width, height):
         super(ApLayer, self).__init__()
         self.height = height
-
+        self.ap     = nn.AvgPool2d((pool_width, 1), stride=1)
     def forward(self, x):
-        poor_width = x.shape[2]
-        self.ap    = nn.AvgPool2d((pool_width, 1), stride=1)
         return self.ap(x).view([-1, self.height])
 
 class WpLayer(nn.Module):
